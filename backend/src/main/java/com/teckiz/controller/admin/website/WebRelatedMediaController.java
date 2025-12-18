@@ -4,8 +4,10 @@ import com.teckiz.entity.Company;
 import com.teckiz.entity.WebRelatedMedia;
 import com.teckiz.repository.WebRelatedMediaRepository;
 import com.teckiz.service.FileUploadService;
+import com.teckiz.service.ImageProcessingService;
 import com.teckiz.service.ModuleAccessManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/website/admin/media")
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class WebRelatedMediaController {
     private final ModuleAccessManager moduleAccessManager;
     private final WebRelatedMediaRepository mediaRepository;
     private final FileUploadService fileUploadService;
+    private final ImageProcessingService imageProcessingService;
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> listMedia(
@@ -114,8 +118,20 @@ public class WebRelatedMediaController {
 
         // Upload file using FileUploadService
         String location;
+        String thumbnailLocation = null;
         try {
             location = fileUploadService.uploadFile(file, "media");
+            
+            // Generate thumbnail if it's an image
+            if (imageProcessingService != null && imageProcessingService.isImage(file)) {
+                try {
+                    String thumbnailPath = "media/thumbnails/" + file.getOriginalFilename();
+                    thumbnailLocation = imageProcessingService.generateThumbnail(file, thumbnailPath);
+                } catch (IOException e) {
+                    // Log warning but continue without thumbnail
+                    System.out.println("Failed to generate thumbnail: " + e.getMessage());
+                }
+            }
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to upload file: " + e.getMessage()));
@@ -134,12 +150,15 @@ public class WebRelatedMediaController {
 
         media = mediaRepository.save(media);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of(
-                        "message", "File uploaded successfully",
-                        "mediaKey", media.getRelatedMediaKey(),
-                        "location", location
-                ));
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "File uploaded successfully");
+        response.put("mediaKey", media.getRelatedMediaKey());
+        response.put("location", location);
+        if (thumbnailLocation != null) {
+            response.put("thumbnail", thumbnailLocation);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{mediaKey}")
@@ -200,6 +219,7 @@ public class WebRelatedMediaController {
         response.put("mediaType", media.getMediaType());
         response.put("poster", media.getPoster());
         response.put("createdAt", media.getCreatedAt());
+        // Note: Thumbnail can be generated on-demand or stored separately
         return response;
     }
 
