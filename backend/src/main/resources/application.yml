@@ -55,4 +55,13 @@ app:
     region: ${AWS_REGION:us-east-1}
     access-key: ${AWS_ACCESS_KEY:}
     secret-key: ${AWS_SECRET_KEY:}
+    s3:
+      bucket-name: ${AWS_S3_BUCKET:teckiz-uploads}
+  
+file:
+  upload:
+    use-s3: ${USE_S3:false}
+    local-path: ${UPLOAD_PATH:uploads}
+    max-size: 10485760 # 10MB
+    allowed-types: image/jpeg,image/png,image/gif,image/webp,application/pdf
 

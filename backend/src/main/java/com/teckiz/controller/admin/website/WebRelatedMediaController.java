@@ -3,6 +3,7 @@ package com.teckiz.controller.admin.website;
 import com.teckiz.entity.Company;
 import com.teckiz.entity.WebRelatedMedia;
 import com.teckiz.repository.WebRelatedMediaRepository;
+import com.teckiz.service.FileUploadService;
 import com.teckiz.service.ModuleAccessManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ public class WebRelatedMediaController {
 
     private final ModuleAccessManager moduleAccessManager;
     private final WebRelatedMediaRepository mediaRepository;
+    private final FileUploadService fileUploadService;
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> listMedia(
@@ -110,11 +112,17 @@ public class WebRelatedMediaController {
                     .body(Map.of("error", "File is empty"));
         }
 
-        // TODO: Implement actual file upload to S3 or local storage
-        // For now, just create a media record
+        // Upload file using FileUploadService
+        String location;
+        try {
+            location = fileUploadService.uploadFile(file, "media");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to upload file: " + e.getMessage()));
+        }
+        
         String fileName = file.getOriginalFilename();
         String mimeType = file.getContentType();
-        String location = "/uploads/" + fileName; // Placeholder
 
         WebRelatedMedia media = WebRelatedMedia.builder()
                 .company(company)
