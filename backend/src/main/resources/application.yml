@@ -57,6 +57,9 @@ app:
     secret-key: ${AWS_SECRET_KEY:}
     s3:
       bucket-name: ${AWS_S3_BUCKET:teckiz-uploads}
+  email:
+    from-address: ${EMAIL_FROM_ADDRESS:noreply@teckiz.com}
+    from-name: ${EMAIL_FROM_NAME:Teckiz}
   
 file:
   upload:

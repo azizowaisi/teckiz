@@ -3,6 +3,7 @@ package com.teckiz.controller.admin.website;
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.WebSubscriber;
 import com.teckiz.repository.WebSubscriberRepository;
+import com.teckiz.service.EmailService;
 import com.teckiz.service.ModuleAccessManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class WebSubscriberController {
 
     private final ModuleAccessManager moduleAccessManager;
     private final WebSubscriberRepository subscriberRepository;
+    private final EmailService emailService;
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> listSubscribers(
@@ -104,6 +106,12 @@ public class WebSubscriberController {
 
         subscriber = subscriberRepository.save(subscriber);
 
+        // Send verification email if email service is available
+        if (emailService != null && !subscriber.getVerified()) {
+            String verificationLink = generateVerificationLink(subscriber.getSubscriberKey());
+            emailService.sendVerificationEmail(subscriber.getEmail(), verificationLink);
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("message", "Subscriber created successfully", "subscriberKey", subscriber.getSubscriberKey()));
     }
@@ -179,6 +187,11 @@ public class WebSubscriberController {
         subscriber.setVerified(true);
         subscriber = subscriberRepository.save(subscriber);
 
+        // Send welcome email if email service is available
+        if (emailService != null) {
+            emailService.sendWelcomeEmail(subscriber.getEmail(), subscriber.getName());
+        }
+
         return ResponseEntity.ok(Map.of("message", "Subscriber verified successfully"));
     }
 
@@ -192,6 +205,11 @@ public class WebSubscriberController {
         response.put("verified", subscriber.getVerified());
         response.put("createdAt", subscriber.getCreatedAt());
         return response;
+    }
+
+    private String generateVerificationLink(String subscriberKey) {
+        // TODO: Replace with actual frontend URL from configuration
+        return "http://localhost:4200/verify-subscriber?key=" + subscriberKey;
     }
 }
 
