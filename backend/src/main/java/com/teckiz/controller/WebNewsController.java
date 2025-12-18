@@ -5,7 +5,6 @@ import com.teckiz.dto.WebNewsResponse;
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.WebContacts;
 import com.teckiz.entity.WebNews;
-import com.teckiz.entity.WebNewsType;
 import com.teckiz.repository.WebContactsRepository;
 import com.teckiz.repository.WebNewsRepository;
 import com.teckiz.repository.WebNewsTypeRepository;

@@ -6,17 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "WebContactType")
+@Table(name = "ResearchArticleType")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WebContactType {
+public class ResearchArticleType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,27 +22,12 @@ public class WebContactType {
     @Column(name = "type_key", length = 255)
     private String typeKey;
 
-    @Column(name = "name", length = 255)
+    @Column(name = "name", length = 255, nullable = false)
     private String name;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
-
-    @Column(name = "position")
-    @Builder.Default
-    private Integer position = 0;
-
-    @Column(name = "is_archived", nullable = false)
-    @Builder.Default
-    private Boolean archived = false;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
+    @JoinColumn(name = "company_id", nullable = false)
     private Company company;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {
@@ -54,3 +36,4 @@ public class WebContactType {
         }
     }
 }
+

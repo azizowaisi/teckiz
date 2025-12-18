@@ -2,6 +2,8 @@ package com.teckiz.repository;
 
 import com.teckiz.entity.Company;
 import com.teckiz.entity.WebAlbum;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +19,9 @@ public interface WebAlbumRepository extends JpaRepository<WebAlbum, Long> {
 
     List<WebAlbum> findByCompany(Company company);
 
-    List<WebAlbum> findByCompanyAndPublishedTrueAndArchivedFalse(Company company);
+    Page<WebAlbum> findByCompany(Company company, Pageable pageable);
+
+    Page<WebAlbum> findByCompanyAndPublishedTrueAndArchivedFalse(Company company, Pageable pageable);
 
     List<WebAlbum> findByCompanyAndCarousalTrueAndPublishedTrue(Company company);
 }

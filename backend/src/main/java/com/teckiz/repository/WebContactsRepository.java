@@ -2,6 +2,8 @@ package com.teckiz.repository;
 
 import com.teckiz.entity.Company;
 import com.teckiz.entity.WebContacts;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +17,6 @@ public interface WebContactsRepository extends JpaRepository<WebContacts, Long> 
 
     List<WebContacts> findByCompany(Company company);
 
-    List<WebContacts> findByCompanyAndArchivedFalseOrderByPositionDesc(Company company);
+    Page<WebContacts> findByCompanyAndArchivedFalseOrderByPositionDesc(Company company, Pageable pageable);
 }
 

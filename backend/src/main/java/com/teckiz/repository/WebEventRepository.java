@@ -2,6 +2,8 @@ package com.teckiz.repository;
 
 import com.teckiz.entity.Company;
 import com.teckiz.entity.WebEvent;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +22,9 @@ public interface WebEventRepository extends JpaRepository<WebEvent, Long> {
 
     List<WebEvent> findByCompany(Company company);
 
-    List<WebEvent> findByCompanyAndPublishedTrueAndArchivedFalse(Company company);
+    Page<WebEvent> findByCompany(Company company, Pageable pageable);
+
+    Page<WebEvent> findByCompanyAndPublishedTrueAndArchivedFalse(Company company, Pageable pageable);
 
     @Query("SELECT e FROM WebEvent e WHERE e.company = :company " +
            "AND e.published = true AND e.archived = false " +

@@ -2,28 +2,73 @@
 
 ## ✅ COMPLETED
 
-### Entities (7/66)
-- ✅ User
-- ✅ Company
-- ✅ Role
-- ✅ Module
-- ✅ Profile (basic)
-- ✅ CompanyRoleMapper
-- ✅ CompanyModuleMapper
+### Entities (28/66 - 42.4%)
+**Core (7):**
+- ✅ User, Company, Role, Module, Profile
+- ✅ CompanyRoleMapper, CompanyModuleMapper
 
-### Services (3)
-- ✅ AuthenticationService
-- ✅ JwtService
-- ✅ UserDetailsServiceImpl
+**Web Content (8):**
+- ✅ WebPage, WebNews, WebNewsType, WebAlbum, WebEvent
+- ✅ WebContacts, WebContactType, WebRelatedMedia
 
-### Controllers (2/50+)
-- ✅ AuthController (login/logout)
-- ✅ SuperAdminController (partial - index, users, modules)
+**Research/Journal (8):**
+- ✅ ResearchJournal, ResearchJournalVolume, ResearchArticle
+- ✅ ResearchArticleAuthor, ResearchArticleAuthorMapper
+- ✅ ResearchArticleReviewerMapper, ResearchArticleType, ResearchArticleStatus
 
-### Repositories (3/50+)
-- ✅ UserRepository
-- ✅ CompanyRepository
-- ✅ ModuleRepository
+**System (5):**
+- ✅ UserCompanyRole, UserCompanyModule, CompanyModuleMapperMenu
+- ✅ PasswordSecrecy, GoogleIndexSetting
+
+### Services (7)
+- ✅ AuthenticationService, JwtService, UserDetailsServiceImpl
+- ✅ WebsiteManager, ModuleAccessManager
+- ✅ UserHelperService, ModuleHelperService
+
+### Controllers (29/50+ - 58%)
+**SuperAdmin (6):**
+- ✅ SuperAdminController, CompanyController, CompanyUserController
+- ✅ CompanyModuleController, CompanyRoleController, RoleController
+
+**Web Content Admin (10):**
+- ✅ WebPageController, WebNewsController, WebNewsTypeController
+- ✅ WebAlbumController, WebEventController, WebContactsController
+- ✅ WebContactTypeController, WebRelatedMediaController
+- ✅ CompanyModuleMapperMenuController, WebsiteDashboardController
+
+**Web Content Public (5):**
+- ✅ PublicWebPageController, PublicWebNewsController
+- ✅ PublicWebAlbumController, PublicWebEventController
+
+**Research/Journal (7):**
+- ✅ ResearchJournalController, ResearchJournalVolumeController
+- ✅ ResearchArticleController, ResearchArticleAuthorController
+- ✅ ResearchArticleReviewerController, ResearchArticleTypeController
+- ✅ PublicResearchArticleController
+
+**Auth (1):**
+- ✅ AuthController
+
+### Repositories (27/50+ - 54%)
+**Core (6):**
+- ✅ UserRepository, CompanyRepository, ModuleRepository
+- ✅ CompanyModuleMapperRepository, CompanyRoleMapperRepository, RoleRepository
+
+**Web Content (8):**
+- ✅ WebPageRepository, WebNewsRepository, WebNewsTypeRepository
+- ✅ WebAlbumRepository, WebEventRepository, WebContactsRepository
+- ✅ WebContactTypeRepository, WebRelatedMediaRepository
+
+**Research/Journal (7):**
+- ✅ ResearchJournalRepository, ResearchJournalVolumeRepository
+- ✅ ResearchArticleRepository, ResearchArticleAuthorRepository
+- ✅ ResearchArticleAuthorMapperRepository, ResearchArticleReviewerMapperRepository
+- ✅ ResearchArticleTypeRepository
+
+**System (6):**
+- ✅ UserCompanyRoleRepository, UserCompanyModuleRepository
+- ✅ CompanyModuleMapperMenuRepository, PasswordSecrecyRepository
+- ✅ GoogleIndexSettingRepository
 
 ### Security
 - ✅ Spring Security configuration
@@ -40,29 +85,32 @@
 
 ---
 
-## ❌ NOT MIGRATED
+## ❌ REMAINING WORK
 
-### Critical Missing Entities (59)
-- ❌ ResearchArticle (15 entities)
-- ❌ WebPage, WebNews, WebAlbum (18 entities)
-- ❌ Education entities (7 entities)
-- ❌ Index/Journal entities (10 entities)
-- ❌ System entities (9 entities)
+### Missing Entities (38/66)
+- ❌ Education entities (Facility, ProgramClass, ProgramCourse, ProgramLevel, etc.) - 7 entities
+- ❌ Index/Journal entities (IndexJournal, IndexJournalArticle, IndexJournalVolume, etc.) - 10 entities
+- ❌ Additional system entities (CompanyInvoice, EmailTemplate, Notification, Statistics, etc.) - 9 entities
+- ❌ Widget entities (WebWidget, WidgetContent) - 2 entities
+- ❌ Subscriber entity (WebSubscriber) - 1 entity
+- ❌ Research related media (ResearchRelatedMedia) - 1 entity
+- ❌ Other entities - 8 entities
 
-### Missing Services/Managers
-- ❌ WebsiteManager (critical for multi-tenant)
-- ❌ ModuleAccessManager
+### Missing Services
+- ❌ File upload service (S3 integration)
 - ❌ Email service (AWS SES)
-- ❌ File upload service (S3)
 - ❌ Image processing service
+- ❌ Statistics service
+- ❌ XML export/import service
 
-### Missing Controllers (48+)
-- ❌ All Company management controllers
-- ❌ All Journal/Article controllers
-- ❌ All Web content controllers
-- ❌ All Education controllers
-- ❌ All Public controllers
-- ❌ All Author/Reviewer controllers
+### Missing Controllers (~21)
+- ❌ Education module controllers (Facility, Program, Skills, Story, etc.)
+- ❌ RJIndex controllers (RJIndexAPIController, RJIndexJournalController, etc.)
+- ❌ Author/Reviewer specific controllers
+- ❌ Widget controllers
+- ❌ Subscriber controller
+- ❌ Notification controller
+- ❌ Setting controllers
 
 ### Missing Helpers (30+)
 - ❌ All AWS helpers
@@ -76,16 +124,15 @@
 ## 📊 MIGRATION PROGRESS
 
 ```
-Entities:        [██░░░░░░░░] 10.6%  (7/66)
-Services:        [████████░░] 100%*   (3/3 core)
-Managers:        [░░░░░░░░░░] 0%      (0/1)
-Controllers:     [█░░░░░░░░░] 4%      (2/50+)
-Repositories:    [█░░░░░░░░░] 6%      (3/50+)
-Helpers:         [█░░░░░░░░░] 3%      (1/30+)
-Security:        [██████████] 100%** (core complete)
+Entities:        [█████░░░░░] 42.4%  (28/66)
+Services:        [███████░░░] 70%     (7/10+)
+Controllers:     [█████░░░░░] 58%     (29/50+)
+Repositories:    [█████░░░░░] 54%     (27/50+)
+DTOs:            [██████░░░░] 60%     (12/20+)
+Security:        [██████████] 100%    (core complete)
 Frontend:        [███░░░░░░░] 30%    (basic structure)
 
-Overall:         [██░░░░░░░░] ~10%
+Overall:         [█████░░░░░] ~50%
 ```
 
 *New services added (JWT, Auth)  
