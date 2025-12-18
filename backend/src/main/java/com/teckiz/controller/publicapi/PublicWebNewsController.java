@@ -1,4 +1,4 @@
-package com.teckiz.controller;
+package com.teckiz.controller.publicapi;
 
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.WebNews;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/public/news")
 @RequiredArgsConstructor
-public class PublicWebNewsController {
+public class WebNewsController {
 
     private final WebsiteManager websiteManager;
     private final WebNewsRepository webNewsRepository;

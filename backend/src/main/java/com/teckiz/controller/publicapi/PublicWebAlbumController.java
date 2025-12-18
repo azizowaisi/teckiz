@@ -1,4 +1,4 @@
-package com.teckiz.controller;
+package com.teckiz.controller.publicapi;
 
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.WebAlbum;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/public/albums")
 @RequiredArgsConstructor
-public class PublicWebAlbumController {
+public class WebAlbumController {
 
     private final WebsiteManager websiteManager;
     private final WebAlbumRepository webAlbumRepository;

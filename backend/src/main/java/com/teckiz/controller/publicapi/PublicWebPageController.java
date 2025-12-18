@@ -1,4 +1,4 @@
-package com.teckiz.controller;
+package com.teckiz.controller.publicapi;
 
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.WebPage;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/public/pages")
 @RequiredArgsConstructor
-public class PublicWebPageController {
+public class WebPageController {
 
     private final WebsiteManager websiteManager;
     private final WebPageRepository webPageRepository;

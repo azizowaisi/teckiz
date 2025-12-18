@@ -1,4 +1,4 @@
-package com.teckiz.controller;
+package com.teckiz.controller.publicapi;
 
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.WebEvent;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/public/events")
 @RequiredArgsConstructor
-public class PublicWebEventController {
+public class WebEventController {
 
     private final WebsiteManager websiteManager;
     private final WebEventRepository webEventRepository;

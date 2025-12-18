@@ -1,4 +1,4 @@
-package com.teckiz.controller;
+package com.teckiz.controller.publicapi;
 
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.ResearchArticle;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/public/journal/articles")
 @RequiredArgsConstructor
-public class PublicResearchArticleController {
+public class ResearchArticleController {
 
     private final WebsiteManager websiteManager;
     private final ResearchArticleRepository articleRepository;
