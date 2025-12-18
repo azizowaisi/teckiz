@@ -1,6 +1,5 @@
 package com.teckiz.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PrincipalMessageRequest {
 
-    @NotBlank(message = "Title is required")
     private String title;
-
-    private String description;
-    private String thumbnail;
+    private String message;
+    private String principalName;
+    private String principalImage;
     private Boolean published;
 }
 

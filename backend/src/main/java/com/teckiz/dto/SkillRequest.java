@@ -16,6 +16,7 @@ public class SkillRequest {
     private String name;
 
     private String description;
+    private String icon;
     private Integer position;
 }
 

@@ -17,7 +17,9 @@ public class SkillResponse {
     private String skillKey;
     private String name;
     private String description;
+    private String icon;
     private Integer position;
+    private Boolean archived;
     private Long companyId;
     private String companyName;
     private LocalDateTime createdAt;

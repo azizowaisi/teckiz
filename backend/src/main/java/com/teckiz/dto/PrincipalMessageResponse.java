@@ -16,10 +16,10 @@ public class PrincipalMessageResponse {
     private Long id;
     private String messageKey;
     private String title;
-    private String description;
-    private String thumbnail;
+    private String message;
+    private String principalName;
+    private String principalImage;
     private Boolean published;
-    private Boolean archived;
     private Long companyId;
     private String companyName;
     private LocalDateTime createdAt;
