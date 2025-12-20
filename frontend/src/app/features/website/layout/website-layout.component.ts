@@ -41,6 +41,21 @@ import { NotificationService } from '../../../core/services/notification.service
             </a>
           </li>
           <li>
+            <a routerLink="/website/contacts" routerLinkActive="active">
+              Contacts
+            </a>
+          </li>
+          <li>
+            <a routerLink="/website/subscribers" routerLinkActive="active">
+              Subscribers
+            </a>
+          </li>
+          <li>
+            <a routerLink="/website/widgets" routerLinkActive="active">
+              Widgets
+            </a>
+          </li>
+          <li>
             <a routerLink="/website/notifications" routerLinkActive="active">
               Notifications
               <span *ngIf="unreadCount > 0" class="badge">{{ unreadCount }}</span>
