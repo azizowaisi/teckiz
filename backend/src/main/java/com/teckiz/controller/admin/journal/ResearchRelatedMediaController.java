@@ -57,8 +57,6 @@ public class ResearchRelatedMediaController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         List<ResearchRelatedMedia> mediaList;
-
-        List<ResearchRelatedMedia> mediaList;
         if (articleKey != null && !articleKey.isEmpty()) {
             mediaList = articleRepository.findByArticleKey(articleKey)
                     .map(article -> mediaRepository.findByResearchArticle(article))

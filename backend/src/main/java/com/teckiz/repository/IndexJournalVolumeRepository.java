@@ -24,6 +24,8 @@ public interface IndexJournalVolumeRepository extends JpaRepository<IndexJournal
 
     List<IndexJournalVolume> findByCompanyAndIndexJournalAndArchivedFalse(
             Company company, IndexJournal indexJournal);
+    Page<IndexJournalVolume> findByCompanyAndIndexJournalAndArchivedFalse(
+            Company company, IndexJournal indexJournal, Pageable pageable);
 
     Page<IndexJournalVolume> findByCompanyAndIndexJournalAndPublishedTrueAndArchivedFalse(
             Company company, IndexJournal indexJournal, Pageable pageable);

@@ -8,6 +8,8 @@ import com.teckiz.service.ImageProcessingService;
 import com.teckiz.service.ModuleAccessManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

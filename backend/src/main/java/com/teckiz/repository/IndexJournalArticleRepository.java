@@ -20,6 +20,7 @@ public interface IndexJournalArticleRepository extends JpaRepository<IndexJourna
     Optional<IndexJournalArticle> findBySlug(String slug);
 
     List<IndexJournalArticle> findByCompany(Company company);
+    Page<IndexJournalArticle> findByCompany(Company company, Pageable pageable);
 
     List<IndexJournalArticle> findByIndexJournal(IndexJournal indexJournal);
 
