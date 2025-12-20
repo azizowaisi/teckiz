@@ -4,7 +4,7 @@ This guide covers deployment of the Teckiz application to production environment
 
 ## Prerequisites
 
-- Java 17+ installed
+- Java 23 (or Java 21 LTS) installed
 - Node.js 18+ and npm installed
 - PostgreSQL database
 - AWS account (for S3 and SES)
