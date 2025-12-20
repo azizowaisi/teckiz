@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { CompanyService } from '../../../core/services/company.service';
 import { CompanyResponse, CompanyRequest } from '../../../core/models/company.model';
 
