@@ -1,9 +1,12 @@
 package com.teckiz.controller.admin.education;
 
+import com.teckiz.dto.SkillRequest;
+import com.teckiz.dto.SkillResponse;
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.Skill;
 import com.teckiz.repository.SkillRepository;
 import com.teckiz.service.ModuleAccessManager;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -32,9 +35,9 @@ public class SkillController {
         List<Skill> skills = skillRepository.findByCompanyAndArchivedFalse(
                 companyModuleMapper.getCompany(), Sort.by("position").ascending());
 
-        List<Map<String, Object>> skillResponses = skills.stream()
+        List<SkillResponse> skillResponses = skills.stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
 
         Map<String, Object> response = new HashMap<>();
         response.put("skills", skillResponses);
@@ -42,7 +45,7 @@ public class SkillController {
     }
 
     @GetMapping("/{skillKey}")
-    public ResponseEntity<Map<String, Object>> getSkill(@PathVariable String skillKey) {
+    public ResponseEntity<SkillResponse> getSkill(@PathVariable String skillKey) {
         moduleAccessManager.authenticateModule();
 
         return skillRepository.findBySkillKey(skillKey)
@@ -51,23 +54,16 @@ public class SkillController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createSkill(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<?> createSkill(@Valid @RequestBody SkillRequest request) {
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
-
-        String name = (String) request.get("name");
-        if (name == null || name.isEmpty()) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Name is required"));
-        }
 
         Skill skill = Skill.builder()
                 .company(companyModuleMapper.getCompany())
                 .companyModuleMapper(companyModuleMapper)
-                .name(name)
-                .description((String) request.get("description"))
-                .icon((String) request.get("icon"))
-                .position(request.get("position") != null ?
-                        ((Number) request.get("position")).intValue() : 0)
+                .name(request.getName())
+                .description(request.getDescription())
+                .icon(request.getIcon())
+                .position(request.getPosition() != null ? request.getPosition() : 0)
                 .archived(false)
                 .build();
 
@@ -80,7 +76,7 @@ public class SkillController {
     @PutMapping("/{skillKey}")
     public ResponseEntity<?> updateSkill(
             @PathVariable String skillKey,
-            @RequestBody Map<String, Object> request) {
+            @Valid @RequestBody SkillRequest request) {
 
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
 
@@ -91,20 +87,17 @@ public class SkillController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        if (request.get("name") != null) {
-            skill.setName((String) request.get("name"));
+        if (request.getName() != null) {
+            skill.setName(request.getName());
         }
-        if (request.get("description") != null) {
-            skill.setDescription((String) request.get("description"));
+        if (request.getDescription() != null) {
+            skill.setDescription(request.getDescription());
         }
-        if (request.get("icon") != null) {
-            skill.setIcon((String) request.get("icon"));
+        if (request.getIcon() != null) {
+            skill.setIcon(request.getIcon());
         }
-        if (request.get("position") != null) {
-            skill.setPosition(((Number) request.get("position")).intValue());
-        }
-        if (request.get("archived") != null) {
-            skill.setArchived((Boolean) request.get("archived"));
+        if (request.getPosition() != null) {
+            skill.setPosition(request.getPosition());
         }
 
         skill = skillRepository.save(skill);
@@ -129,18 +122,20 @@ public class SkillController {
         return ResponseEntity.ok(Map.of("message", "Skill deleted successfully"));
     }
 
-    private Map<String, Object> mapToResponse(Skill skill) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", skill.getId());
-        response.put("skillKey", skill.getSkillKey());
-        response.put("name", skill.getName());
-        response.put("description", skill.getDescription());
-        response.put("icon", skill.getIcon());
-        response.put("position", skill.getPosition());
-        response.put("archived", skill.getArchived());
-        response.put("createdAt", skill.getCreatedAt());
-        response.put("updatedAt", skill.getUpdatedAt());
-        return response;
+    private SkillResponse mapToResponse(Skill skill) {
+        return SkillResponse.builder()
+                .id(skill.getId())
+                .skillKey(skill.getSkillKey())
+                .name(skill.getName())
+                .description(skill.getDescription())
+                .icon(skill.getIcon())
+                .position(skill.getPosition())
+                .archived(skill.getArchived())
+                .companyId(skill.getCompany().getId())
+                .companyName(skill.getCompany().getName())
+                .createdAt(skill.getCreatedAt())
+                .updatedAt(skill.getUpdatedAt())
+                .build();
     }
 }
 

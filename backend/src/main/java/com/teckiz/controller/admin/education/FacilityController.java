@@ -1,9 +1,12 @@
 package com.teckiz.controller.admin.education;
 
+import com.teckiz.dto.FacilityRequest;
+import com.teckiz.dto.FacilityResponse;
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.Facility;
 import com.teckiz.repository.FacilityRepository;
 import com.teckiz.service.ModuleAccessManager;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,7 +49,7 @@ public class FacilityController {
             facilities = facilityRepository.findByCompany(companyModuleMapper.getCompany(), pageable);
         }
 
-        List<Map<String, Object>> facilityResponses = facilities.getContent().stream()
+        List<FacilityResponse> facilityResponses = facilities.getContent().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
 
@@ -59,7 +62,7 @@ public class FacilityController {
     }
 
     @GetMapping("/{facilityKey}")
-    public ResponseEntity<Map<String, Object>> getFacility(@PathVariable String facilityKey) {
+    public ResponseEntity<FacilityResponse> getFacility(@PathVariable String facilityKey) {
         moduleAccessManager.authenticateModule();
 
         return facilityRepository.findByFacilityKey(facilityKey)
@@ -68,23 +71,16 @@ public class FacilityController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createFacility(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<?> createFacility(@Valid @RequestBody FacilityRequest request) {
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
-
-        String name = (String) request.get("name");
-        if (name == null || name.isEmpty()) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Name is required"));
-        }
 
         Facility facility = Facility.builder()
                 .company(companyModuleMapper.getCompany())
                 .companyModuleMapper(companyModuleMapper)
-                .name(name)
-                .description((String) request.get("description"))
-                .thumbnail((String) request.get("thumbnail"))
-                .published(request.get("published") != null ?
-                        (Boolean) request.get("published") : false)
+                .name(request.getName())
+                .description(request.getDescription())
+                .thumbnail(request.getThumbnail())
+                .published(request.getPublished() != null ? request.getPublished() : false)
                 .archived(false)
                 .build();
 
@@ -97,7 +93,7 @@ public class FacilityController {
     @PutMapping("/{facilityKey}")
     public ResponseEntity<?> updateFacility(
             @PathVariable String facilityKey,
-            @RequestBody Map<String, Object> request) {
+            @Valid @RequestBody FacilityRequest request) {
 
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
 
@@ -108,20 +104,17 @@ public class FacilityController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        if (request.get("name") != null) {
-            facility.setName((String) request.get("name"));
+        if (request.getName() != null) {
+            facility.setName(request.getName());
         }
-        if (request.get("description") != null) {
-            facility.setDescription((String) request.get("description"));
+        if (request.getDescription() != null) {
+            facility.setDescription(request.getDescription());
         }
-        if (request.get("thumbnail") != null) {
-            facility.setThumbnail((String) request.get("thumbnail"));
+        if (request.getThumbnail() != null) {
+            facility.setThumbnail(request.getThumbnail());
         }
-        if (request.get("published") != null) {
-            facility.setPublished((Boolean) request.get("published"));
-        }
-        if (request.get("archived") != null) {
-            facility.setArchived((Boolean) request.get("archived"));
+        if (request.getPublished() != null) {
+            facility.setPublished(request.getPublished());
         }
 
         facility = facilityRepository.save(facility);
@@ -146,18 +139,20 @@ public class FacilityController {
         return ResponseEntity.ok(Map.of("message", "Facility deleted successfully"));
     }
 
-    private Map<String, Object> mapToResponse(Facility facility) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", facility.getId());
-        response.put("facilityKey", facility.getFacilityKey());
-        response.put("name", facility.getName());
-        response.put("description", facility.getDescription());
-        response.put("thumbnail", facility.getThumbnail());
-        response.put("published", facility.getPublished());
-        response.put("archived", facility.getArchived());
-        response.put("createdAt", facility.getCreatedAt());
-        response.put("updatedAt", facility.getUpdatedAt());
-        return response;
+    private FacilityResponse mapToResponse(Facility facility) {
+        return FacilityResponse.builder()
+                .id(facility.getId())
+                .facilityKey(facility.getFacilityKey())
+                .name(facility.getName())
+                .description(facility.getDescription())
+                .thumbnail(facility.getThumbnail())
+                .published(facility.getPublished())
+                .archived(facility.getArchived())
+                .companyId(facility.getCompany().getId())
+                .companyName(facility.getCompany().getName())
+                .createdAt(facility.getCreatedAt())
+                .updatedAt(facility.getUpdatedAt())
+                .build();
     }
 }
 

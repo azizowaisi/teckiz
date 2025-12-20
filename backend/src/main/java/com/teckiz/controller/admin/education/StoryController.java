@@ -1,11 +1,14 @@
 package com.teckiz.controller.admin.education;
 
+import com.teckiz.dto.StoryRequest;
+import com.teckiz.dto.StoryResponse;
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.Story;
 import com.teckiz.entity.StoryType;
 import com.teckiz.repository.StoryRepository;
 import com.teckiz.repository.StoryTypeRepository;
 import com.teckiz.service.ModuleAccessManager;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -66,7 +69,7 @@ public class StoryController {
                 Map<String, Object> response = new HashMap<>();
                 response.put("stories", paginated.stream()
                         .map(this::mapToResponse)
-                        .collect(Collectors.toList()));
+                        .toList());
                 response.put("totalPages", (int) Math.ceil((double) filtered.size() / size));
                 response.put("totalElements", filtered.size());
                 response.put("currentPage", page);
@@ -74,9 +77,9 @@ public class StoryController {
             }
         }
 
-        List<Map<String, Object>> storyResponses = stories.getContent().stream()
+        List<StoryResponse> storyResponses = stories.getContent().stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
 
         Map<String, Object> response = new HashMap<>();
         response.put("stories", storyResponses);
@@ -87,7 +90,7 @@ public class StoryController {
     }
 
     @GetMapping("/{storyKey}")
-    public ResponseEntity<Map<String, Object>> getStory(@PathVariable String storyKey) {
+    public ResponseEntity<StoryResponse> getStory(@PathVariable String storyKey) {
         moduleAccessManager.authenticateModule();
 
         return storyRepository.findByStoryKey(storyKey)
@@ -96,29 +99,22 @@ public class StoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createStory(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<?> createStory(@Valid @RequestBody StoryRequest request) {
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
-
-        String title = (String) request.get("title");
-        if (title == null || title.isEmpty()) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Title is required"));
-        }
 
         Story story = Story.builder()
                 .company(companyModuleMapper.getCompany())
                 .companyModuleMapper(companyModuleMapper)
-                .title(title)
-                .description((String) request.get("description"))
-                .thumbnail((String) request.get("thumbnail"))
-                .published(request.get("published") != null ?
-                        (Boolean) request.get("published") : false)
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .thumbnail(request.getThumbnail())
+                .published(request.getPublished() != null ? request.getPublished() : false)
                 .archived(false)
                 .build();
 
         // Set story type if provided
-        if (request.get("storyTypeKey") != null) {
-            storyTypeRepository.findByTypeKey((String) request.get("storyTypeKey"))
+        if (request.getStoryTypeKey() != null && !request.getStoryTypeKey().isEmpty()) {
+            storyTypeRepository.findByTypeKey(request.getStoryTypeKey())
                     .ifPresent(story::setStoryType);
         }
 
@@ -131,7 +127,7 @@ public class StoryController {
     @PutMapping("/{storyKey}")
     public ResponseEntity<?> updateStory(
             @PathVariable String storyKey,
-            @RequestBody Map<String, Object> request) {
+            @Valid @RequestBody StoryRequest request) {
 
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
 
@@ -142,23 +138,20 @@ public class StoryController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        if (request.get("title") != null) {
-            story.setTitle((String) request.get("title"));
+        if (request.getTitle() != null) {
+            story.setTitle(request.getTitle());
         }
-        if (request.get("description") != null) {
-            story.setDescription((String) request.get("description"));
+        if (request.getDescription() != null) {
+            story.setDescription(request.getDescription());
         }
-        if (request.get("thumbnail") != null) {
-            story.setThumbnail((String) request.get("thumbnail"));
+        if (request.getThumbnail() != null) {
+            story.setThumbnail(request.getThumbnail());
         }
-        if (request.get("published") != null) {
-            story.setPublished((Boolean) request.get("published"));
+        if (request.getPublished() != null) {
+            story.setPublished(request.getPublished());
         }
-        if (request.get("archived") != null) {
-            story.setArchived((Boolean) request.get("archived"));
-        }
-        if (request.get("storyTypeKey") != null) {
-            storyTypeRepository.findByTypeKey((String) request.get("storyTypeKey"))
+        if (request.getStoryTypeKey() != null && !request.getStoryTypeKey().isEmpty()) {
+            storyTypeRepository.findByTypeKey(request.getStoryTypeKey())
                     .ifPresent(story::setStoryType);
         }
 
@@ -184,24 +177,26 @@ public class StoryController {
         return ResponseEntity.ok(Map.of("message", "Story deleted successfully"));
     }
 
-    private Map<String, Object> mapToResponse(Story story) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", story.getId());
-        response.put("storyKey", story.getStoryKey());
-        response.put("title", story.getTitle());
-        response.put("description", story.getDescription());
-        response.put("thumbnail", story.getThumbnail());
-        response.put("published", story.getPublished());
-        response.put("archived", story.getArchived());
+    private StoryResponse mapToResponse(Story story) {
+        StoryResponse.StoryResponseBuilder builder = StoryResponse.builder()
+                .id(story.getId())
+                .storyKey(story.getStoryKey())
+                .title(story.getTitle())
+                .description(story.getDescription())
+                .thumbnail(story.getThumbnail())
+                .published(story.getPublished())
+                .archived(story.getArchived())
+                .companyId(story.getCompany().getId())
+                .companyName(story.getCompany().getName())
+                .createdAt(story.getCreatedAt())
+                .updatedAt(story.getUpdatedAt());
+
         if (story.getStoryType() != null) {
-            response.put("storyType", Map.of(
-                    "typeKey", story.getStoryType().getTypeKey(),
-                    "name", story.getStoryType().getName()
-            ));
+            builder.storyTypeId(story.getStoryType().getId())
+                   .storyTypeName(story.getStoryType().getName());
         }
-        response.put("createdAt", story.getCreatedAt());
-        response.put("updatedAt", story.getUpdatedAt());
-        return response;
+
+        return builder.build();
     }
 }
 

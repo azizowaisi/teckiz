@@ -1,9 +1,12 @@
 package com.teckiz.controller.admin.education;
 
+import com.teckiz.dto.StoryTypeRequest;
+import com.teckiz.dto.StoryTypeResponse;
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.StoryType;
 import com.teckiz.repository.StoryTypeRepository;
 import com.teckiz.service.ModuleAccessManager;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +33,9 @@ public class StoryTypeController {
 
         List<StoryType> storyTypes = storyTypeRepository.findByCompanyModuleMapper(companyModuleMapper);
 
-        List<Map<String, Object>> typeResponses = storyTypes.stream()
+        List<StoryTypeResponse> typeResponses = storyTypes.stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
 
         Map<String, Object> response = new HashMap<>();
         response.put("storyTypes", typeResponses);
@@ -40,7 +43,7 @@ public class StoryTypeController {
     }
 
     @GetMapping("/{typeKey}")
-    public ResponseEntity<Map<String, Object>> getStoryType(@PathVariable String typeKey) {
+    public ResponseEntity<StoryTypeResponse> getStoryType(@PathVariable String typeKey) {
         moduleAccessManager.authenticateModule();
 
         return storyTypeRepository.findByTypeKey(typeKey)
@@ -49,20 +52,14 @@ public class StoryTypeController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createStoryType(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<?> createStoryType(@Valid @RequestBody StoryTypeRequest request) {
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
-
-        String name = (String) request.get("name");
-        if (name == null || name.isEmpty()) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Name is required"));
-        }
 
         StoryType storyType = StoryType.builder()
                 .company(companyModuleMapper.getCompany())
                 .companyModuleMapper(companyModuleMapper)
-                .name(name)
-                .description((String) request.get("description"))
+                .name(request.getName())
+                .description(request.getDescription())
                 .build();
 
         storyType = storyTypeRepository.save(storyType);
@@ -74,7 +71,7 @@ public class StoryTypeController {
     @PutMapping("/{typeKey}")
     public ResponseEntity<?> updateStoryType(
             @PathVariable String typeKey,
-            @RequestBody Map<String, Object> request) {
+            @Valid @RequestBody StoryTypeRequest request) {
 
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
 
@@ -86,11 +83,11 @@ public class StoryTypeController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        if (request.get("name") != null) {
-            storyType.setName((String) request.get("name"));
+        if (request.getName() != null) {
+            storyType.setName(request.getName());
         }
-        if (request.get("description") != null) {
-            storyType.setDescription((String) request.get("description"));
+        if (request.getDescription() != null) {
+            storyType.setDescription(request.getDescription());
         }
 
         storyType = storyTypeRepository.save(storyType);
@@ -115,13 +112,15 @@ public class StoryTypeController {
         return ResponseEntity.ok(Map.of("message", "Story type deleted successfully"));
     }
 
-    private Map<String, Object> mapToResponse(StoryType storyType) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", storyType.getId());
-        response.put("typeKey", storyType.getTypeKey());
-        response.put("name", storyType.getName());
-        response.put("description", storyType.getDescription());
-        return response;
+    private StoryTypeResponse mapToResponse(StoryType storyType) {
+        return StoryTypeResponse.builder()
+                .id(storyType.getId())
+                .typeKey(storyType.getTypeKey())
+                .name(storyType.getName())
+                .description(storyType.getDescription())
+                .companyId(storyType.getCompany().getId())
+                .companyName(storyType.getCompany().getName())
+                .build();
     }
 }
 

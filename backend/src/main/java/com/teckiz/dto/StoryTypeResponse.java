@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -19,7 +17,5 @@ public class StoryTypeResponse {
     private String description;
     private Long companyId;
     private String companyName;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }
 

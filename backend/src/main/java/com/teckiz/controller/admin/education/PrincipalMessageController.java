@@ -1,9 +1,12 @@
 package com.teckiz.controller.admin.education;
 
+import com.teckiz.dto.PrincipalMessageRequest;
+import com.teckiz.dto.PrincipalMessageResponse;
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.PrincipalMessage;
 import com.teckiz.repository.PrincipalMessageRepository;
 import com.teckiz.service.ModuleAccessManager;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +26,7 @@ public class PrincipalMessageController {
     private final PrincipalMessageRepository messageRepository;
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getPrincipalMessage() {
+    public ResponseEntity<PrincipalMessageResponse> getPrincipalMessage() {
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
 
         PrincipalMessage message = messageRepository
@@ -44,7 +47,7 @@ public class PrincipalMessageController {
     }
 
     @GetMapping("/{messageKey}")
-    public ResponseEntity<Map<String, Object>> getMessageByKey(@PathVariable String messageKey) {
+    public ResponseEntity<PrincipalMessageResponse> getMessageByKey(@PathVariable String messageKey) {
         moduleAccessManager.authenticateModule();
 
         return messageRepository.findByMessageKey(messageKey)
@@ -53,18 +56,17 @@ public class PrincipalMessageController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createPrincipalMessage(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<?> createPrincipalMessage(@Valid @RequestBody PrincipalMessageRequest request) {
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
 
         PrincipalMessage message = PrincipalMessage.builder()
                 .company(companyModuleMapper.getCompany())
                 .companyModuleMapper(companyModuleMapper)
-                .title((String) request.get("title"))
-                .message((String) request.get("message"))
-                .principalName((String) request.get("principalName"))
-                .principalImage((String) request.get("principalImage"))
-                .published(request.get("published") != null ?
-                        (Boolean) request.get("published") : false)
+                .title(request.getTitle())
+                .message(request.getMessage())
+                .principalName(request.getPrincipalName())
+                .principalImage(request.getPrincipalImage())
+                .published(request.getPublished() != null ? request.getPublished() : false)
                 .build();
 
         message = messageRepository.save(message);
@@ -76,7 +78,7 @@ public class PrincipalMessageController {
     @PutMapping("/{messageKey}")
     public ResponseEntity<?> updatePrincipalMessage(
             @PathVariable String messageKey,
-            @RequestBody Map<String, Object> request) {
+            @Valid @RequestBody PrincipalMessageRequest request) {
 
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
 
@@ -87,20 +89,20 @@ public class PrincipalMessageController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        if (request.get("title") != null) {
-            message.setTitle((String) request.get("title"));
+        if (request.getTitle() != null) {
+            message.setTitle(request.getTitle());
         }
-        if (request.get("message") != null) {
-            message.setMessage((String) request.get("message"));
+        if (request.getMessage() != null) {
+            message.setMessage(request.getMessage());
         }
-        if (request.get("principalName") != null) {
-            message.setPrincipalName((String) request.get("principalName"));
+        if (request.getPrincipalName() != null) {
+            message.setPrincipalName(request.getPrincipalName());
         }
-        if (request.get("principalImage") != null) {
-            message.setPrincipalImage((String) request.get("principalImage"));
+        if (request.getPrincipalImage() != null) {
+            message.setPrincipalImage(request.getPrincipalImage());
         }
-        if (request.get("published") != null) {
-            message.setPublished((Boolean) request.get("published"));
+        if (request.getPublished() != null) {
+            message.setPublished(request.getPublished());
         }
 
         message = messageRepository.save(message);
@@ -124,18 +126,20 @@ public class PrincipalMessageController {
         return ResponseEntity.ok(Map.of("message", "Principal message deleted successfully"));
     }
 
-    private Map<String, Object> mapToResponse(PrincipalMessage message) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", message.getId());
-        response.put("messageKey", message.getMessageKey());
-        response.put("title", message.getTitle());
-        response.put("message", message.getMessage());
-        response.put("principalName", message.getPrincipalName());
-        response.put("principalImage", message.getPrincipalImage());
-        response.put("published", message.getPublished());
-        response.put("createdAt", message.getCreatedAt());
-        response.put("updatedAt", message.getUpdatedAt());
-        return response;
+    private PrincipalMessageResponse mapToResponse(PrincipalMessage message) {
+        return PrincipalMessageResponse.builder()
+                .id(message.getId())
+                .messageKey(message.getMessageKey())
+                .title(message.getTitle())
+                .message(message.getMessage())
+                .principalName(message.getPrincipalName())
+                .principalImage(message.getPrincipalImage())
+                .published(message.getPublished())
+                .companyId(message.getCompany().getId())
+                .companyName(message.getCompany().getName())
+                .createdAt(message.getCreatedAt())
+                .updatedAt(message.getUpdatedAt())
+                .build();
     }
 }
 
