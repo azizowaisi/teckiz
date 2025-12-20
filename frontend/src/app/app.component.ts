@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
 import { LoadingService } from './core/services/loading.service';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
@@ -24,8 +25,10 @@ import { ToastComponent } from './shared/components/toast/toast.component';
 })
 export class AppComponent {
   title = 'Teckiz';
-  loading$ = this.loadingService.loading$;
+  loading$: Observable<boolean>;
 
-  constructor(private loadingService: LoadingService) {}
+  constructor(private loadingService: LoadingService) {
+    this.loading$ = this.loadingService.loading$;
+  }
 }
 

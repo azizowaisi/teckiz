@@ -195,7 +195,7 @@ import { NotificationService } from '../../../core/services/notification.service
   `]
 })
 export class WebsiteLayoutComponent {
-  currentUser = this.authService.getCurrentUser();
+  currentUser: any;
   unreadCount = 0;
 
   constructor(
