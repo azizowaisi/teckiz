@@ -17,5 +17,7 @@ export * from './program.model';
 export * from './researchjournal.model';
 export * from './researcharticle.model';
 export * from './indexjournal.model';
+export * from './invoice.model';
+export * from './notificationrequest.model';
 export * from './notification.model';
 

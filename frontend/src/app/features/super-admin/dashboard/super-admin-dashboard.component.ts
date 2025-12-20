@@ -39,6 +39,16 @@ import { AuthService } from '../../../core/services/auth.service';
               Email Templates
             </a>
           </li>
+          <li>
+            <a routerLink="/superadmin/invoices" routerLinkActive="active">
+              Invoices
+            </a>
+          </li>
+          <li>
+            <a routerLink="/superadmin/notification-requests" routerLinkActive="active">
+              Notification Requests
+            </a>
+          </li>
         </ul>
         <div class="sidebar-footer">
           <div class="user-info">

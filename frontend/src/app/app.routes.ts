@@ -19,6 +19,8 @@ export const routes: Routes = [
         { path: 'users', loadComponent: () => import('./features/super-admin/users/users.component').then(m => m.UsersComponent) },
         { path: 'modules', loadComponent: () => import('./features/super-admin/modules/modules.component').then(m => m.ModulesComponent) },
         { path: 'email-templates', loadComponent: () => import('./features/super-admin/email-templates/email-templates.component').then(m => m.EmailTemplatesComponent) },
+        { path: 'invoices', loadComponent: () => import('./features/super-admin/invoices/invoices.component').then(m => m.InvoicesComponent) },
+        { path: 'notification-requests', loadComponent: () => import('./features/super-admin/notification-requests/notification-requests.component').then(m => m.NotificationRequestsComponent) },
       ]
   },
   {
