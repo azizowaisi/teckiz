@@ -30,7 +30,13 @@ public interface IndexJournalArticleRepository extends JpaRepository<IndexJourna
     List<IndexJournalArticle> findByCompanyAndIndexJournalAndPublishedTrueAndArchivedFalse(
             Company company, IndexJournal indexJournal);
 
+    Page<IndexJournalArticle> findByCompanyAndIndexJournalAndPublishedTrueAndArchivedFalse(
+            Company company, IndexJournal indexJournal, Pageable pageable);
+
     List<IndexJournalArticle> findByCompanyAndIndexJournalVolumeAndPublishedTrueAndArchivedFalse(
             Company company, IndexJournalVolume volume);
+
+    Page<IndexJournalArticle> findByCompanyAndIndexJournalVolumeAndPublishedTrueAndArchivedFalse(
+            Company company, IndexJournalVolume volume, Pageable pageable);
 }
 
