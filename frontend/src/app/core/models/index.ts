@@ -20,5 +20,12 @@ export * from './indexjournal.model';
 export * from './invoice.model';
 export * from './notificationrequest.model';
 export * from './widget.model';
+export * from './webnewstype.model';
+export * from './webcontacttype.model';
+export * from './storytype.model';
+export * from './programterm.model';
+export * from './programleveltype.model';
+export * from './researcharticleauthor.model';
+export * from './researcharticletype.model';
 export * from './notification.model';
 

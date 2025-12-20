@@ -66,6 +66,18 @@ export const routes: Routes = [
       {
         path: 'program-classes',
         loadComponent: () => import('./features/education/program-classes/program-classes.component').then(m => m.ProgramClassesComponent)
+      },
+      {
+        path: 'program-terms',
+        loadComponent: () => import('./features/education/program-terms/program-terms.component').then(m => m.ProgramTermsComponent)
+      },
+      {
+        path: 'story-types',
+        loadComponent: () => import('./features/education/story-types/story-types.component').then(m => m.StoryTypesComponent)
+      },
+      {
+        path: 'program-level-types',
+        loadComponent: () => import('./features/education/program-level-types/program-level-types.component').then(m => m.ProgramLevelTypesComponent)
       }
     ]
   },
@@ -85,6 +97,14 @@ export const routes: Routes = [
       {
         path: 'research-journals/:journalKey/volumes',
         loadComponent: () => import('./features/journal/journal-volumes/journal-volumes.component').then(m => m.JournalVolumesComponent)
+      },
+      {
+        path: 'research-articles/:articleKey/authors',
+        loadComponent: () => import('./features/journal/article-authors/article-authors.component').then(m => m.ArticleAuthorsComponent)
+      },
+      {
+        path: 'article-types',
+        loadComponent: () => import('./features/journal/article-types/article-types.component').then(m => m.ArticleTypesComponent)
       },
       {
         path: 'index-journals',

@@ -48,6 +48,16 @@ export const websiteRoutes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'news-types',
+    loadComponent: () => import('./news-types/news-types.component').then(m => m.NewsTypesComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'contact-types',
+    loadComponent: () => import('./contact-types/contact-types.component').then(m => m.ContactTypesComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'notifications',
     loadComponent: () => import('./notifications/notifications.component').then(m => m.NotificationsComponent),
     canActivate: [authGuard]
