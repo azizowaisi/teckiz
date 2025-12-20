@@ -39,6 +39,18 @@ export const routes: Routes = [
       {
         path: 'facilities',
         loadComponent: () => import('./features/education/facilities/facilities.component').then(m => m.FacilitiesComponent)
+      },
+      {
+        path: 'stories',
+        loadComponent: () => import('./features/education/stories/stories.component').then(m => m.StoriesComponent)
+      },
+      {
+        path: 'skills',
+        loadComponent: () => import('./features/education/skills/skills.component').then(m => m.SkillsComponent)
+      },
+      {
+        path: 'principal-message',
+        loadComponent: () => import('./features/education/principal-message/principal-message.component').then(m => m.PrincipalMessageComponent)
       }
     ]
   },

@@ -10,5 +10,8 @@ export * from './webcontact.model';
 export * from './websubscriber.model';
 export * from './webmedia.model';
 export * from './facility.model';
+export * from './story.model';
+export * from './skill.model';
+export * from './principalmessage.model';
 export * from './notification.model';
 
