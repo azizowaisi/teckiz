@@ -59,7 +59,7 @@ public class PrincipalMessageController {
     public ResponseEntity<?> createPrincipalMessage(@Valid @RequestBody PrincipalMessageRequest request) {
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
 
-        PrincipalMessage message = PrincipalMessage.builder()
+            PrincipalMessage message = new PrincipalMessage();
                 .company(companyModuleMapper.getCompany())
                 .companyModuleMapper(companyModuleMapper)
                 .title(request.getTitle())
