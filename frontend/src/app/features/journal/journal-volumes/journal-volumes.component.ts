@@ -1,50 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ResearchJournalService } from '../../../core/services/researchjournal.service';
-import { ResearchJournalResponse, ResearchJournalRequest } from '../../../core/models/researchjournal.model';
+import { ResearchJournalVolumeResponse, ResearchJournalVolumeRequest, ResearchJournalResponse } from '../../../core/models/researchjournal.model';
 
 @Component({
-  selector: 'app-research-journals',
+  selector: 'app-journal-volumes',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   template: `
-    <div class="journals-container">
+    <div class="volumes-container">
       <div class="header">
-        <h1>Research Journals Management</h1>
-        <button class="btn btn-primary" (click)="showCreateForm = true">Create New Journal</button>
+        <h1>Journal Volumes: {{ journalTitle }}</h1>
+        <button class="btn btn-secondary" (click)="goBack()">Back to Journals</button>
+        <button class="btn btn-primary" (click)="showCreateForm = true">Create New Volume</button>
       </div>
 
-      <div *ngIf="showCreateForm || editingJournal" class="form-container">
-        <h2>{{ editingJournal ? 'Edit Journal' : 'Create New Journal' }}</h2>
-        <form [formGroup]="journalForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="showCreateForm || editingVolume" class="form-container">
+        <h2>{{ editingVolume ? 'Edit Volume' : 'Create New Volume' }}</h2>
+        <form [formGroup]="volumeForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
             <label>Title *</label>
             <input type="text" formControlName="title" />
-            <div *ngIf="journalForm.get('title')?.invalid && journalForm.get('title')?.touched" class="error">
+            <div *ngIf="volumeForm.get('title')?.invalid && volumeForm.get('title')?.touched" class="error">
               Title is required
             </div>
           </div>
 
-          <div class="form-group">
-            <label>Slug</label>
-            <input type="text" formControlName="slug" />
-          </div>
-
-          <div class="form-group">
-            <label>Short Description</label>
-            <textarea formControlName="shortDescription" rows="2"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>Description</label>
-            <textarea formControlName="description" rows="6"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>Thumbnail URL</label>
-            <input type="text" formControlName="thumbnail" />
+          <div class="form-row">
+            <div class="form-group">
+              <label>Volume Number</label>
+              <input type="number" formControlName="volumeNumber" />
+            </div>
+            <div class="form-group">
+              <label>Year</label>
+              <input type="number" formControlName="year" />
+            </div>
           </div>
 
           <div class="form-group">
@@ -55,8 +48,8 @@ import { ResearchJournalResponse, ResearchJournalRequest } from '../../../core/m
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="btn btn-primary" [disabled]="journalForm.invalid || loading">
-              {{ loading ? 'Saving...' : (editingJournal ? 'Update' : 'Create') }}
+            <button type="submit" class="btn btn-primary" [disabled]="volumeForm.invalid || loading">
+              {{ loading ? 'Saving...' : (editingVolume ? 'Update' : 'Create') }}
             </button>
             <button type="button" class="btn btn-secondary" (click)="cancelForm()">Cancel</button>
           </div>
@@ -64,33 +57,34 @@ import { ResearchJournalResponse, ResearchJournalRequest } from '../../../core/m
       </div>
 
       <div *ngIf="error" class="error-message">{{ error }}</div>
-      <div *ngIf="loading && !showCreateForm" class="loading">Loading journals...</div>
+      <div *ngIf="loading && !showCreateForm" class="loading">Loading volumes...</div>
 
-      <div class="journals-list" *ngIf="journals.length > 0">
+      <div class="volumes-list" *ngIf="volumes.length > 0">
         <table>
           <thead>
             <tr>
               <th>Title</th>
-              <th>Slug</th>
+              <th>Volume #</th>
+              <th>Year</th>
               <th>Status</th>
               <th>Updated</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let journal of journals">
-              <td>{{ journal.title }}</td>
-              <td>{{ journal.slug }}</td>
+            <tr *ngFor="let volume of volumes">
+              <td>{{ volume.title }}</td>
+              <td>{{ volume.volumeNumber || '-' }}</td>
+              <td>{{ volume.year || '-' }}</td>
               <td>
-                <span [class]="journal.published ? 'badge published' : 'badge draft'">
-                  {{ journal.published ? 'Published' : 'Draft' }}
+                <span [class]="volume.published ? 'badge published' : 'badge draft'">
+                  {{ volume.published ? 'Published' : 'Draft' }}
                 </span>
               </td>
-              <td>{{ journal.updatedAt | date:'short' }}</td>
+              <td>{{ volume.updatedAt | date:'short' }}</td>
               <td>
-                <a [routerLink]="['/journal/research-journals', journal.journalKey, 'volumes']" class="btn btn-sm btn-info">Volumes</a>
-                <button class="btn btn-sm btn-primary" (click)="editJournal(journal)">Edit</button>
-                <button class="btn btn-sm btn-danger" (click)="deleteJournal(journal)">Delete</button>
+                <button class="btn btn-sm btn-primary" (click)="editVolume(volume)">Edit</button>
+                <button class="btn btn-sm btn-danger" (click)="deleteVolume(volume)">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -105,7 +99,7 @@ import { ResearchJournalResponse, ResearchJournalRequest } from '../../../core/m
     </div>
   `,
   styles: [`
-    .journals-container {
+    .volumes-container {
       padding: 20px;
     }
 
@@ -114,6 +108,7 @@ import { ResearchJournalResponse, ResearchJournalRequest } from '../../../core/m
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
+      gap: 10px;
     }
 
     .form-container {
@@ -122,6 +117,12 @@ import { ResearchJournalResponse, ResearchJournalRequest } from '../../../core/m
       border-radius: 8px;
       margin-bottom: 20px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
     }
 
     .form-group {
@@ -134,8 +135,7 @@ import { ResearchJournalResponse, ResearchJournalRequest } from '../../../core/m
       font-weight: 500;
     }
 
-    .form-group input,
-    .form-group textarea {
+    .form-group input {
       width: 100%;
       padding: 8px;
       border: 1px solid #ddd;
@@ -149,7 +149,7 @@ import { ResearchJournalResponse, ResearchJournalRequest } from '../../../core/m
       margin-top: 20px;
     }
 
-    .journals-list {
+    .volumes-list {
       background: white;
       border-radius: 8px;
       overflow: hidden;
@@ -211,13 +211,6 @@ import { ResearchJournalResponse, ResearchJournalRequest } from '../../../core/m
       color: white;
     }
 
-    .btn-info {
-      background-color: #17a2b8;
-      color: white;
-      text-decoration: none;
-      display: inline-block;
-    }
-
     .btn-sm {
       padding: 4px 8px;
       font-size: 12px;
@@ -265,81 +258,97 @@ import { ResearchJournalResponse, ResearchJournalRequest } from '../../../core/m
     }
   `]
 })
-export class ResearchJournalsComponent implements OnInit {
-  journals: ResearchJournalResponse[] = [];
+export class JournalVolumesComponent implements OnInit {
+  journalKey: string = '';
+  journalTitle: string = '';
+  volumes: ResearchJournalVolumeResponse[] = [];
   loading = false;
   error = '';
   showCreateForm = false;
-  editingJournal: ResearchJournalResponse | null = null;
-  journalForm: FormGroup;
+  editingVolume: ResearchJournalVolumeResponse | null = null;
+  volumeForm: FormGroup;
   currentPage = 0;
   totalPages = 0;
 
   constructor(
+    private route: ActivatedRoute,
     private researchJournalService: ResearchJournalService,
     private fb: FormBuilder
   ) {
-    this.journalForm = this.fb.group({
+    this.volumeForm = this.fb.group({
       title: ['', Validators.required],
-      slug: [''],
-      shortDescription: [''],
-      description: [''],
-      thumbnail: [''],
+      volumeNumber: [null],
+      year: [null],
       published: [false]
     });
   }
 
   ngOnInit(): void {
-    this.loadJournals();
+    this.journalKey = this.route.snapshot.paramMap.get('journalKey') || '';
+    if (this.journalKey) {
+      this.loadJournal();
+      this.loadVolumes();
+    }
   }
 
-  loadJournals(page: number = 0): void {
+  loadJournal(): void {
+    this.researchJournalService.getJournal(this.journalKey).subscribe({
+      next: (journal) => {
+        this.journalTitle = journal.title;
+      }
+    });
+  }
+
+  loadVolumes(page: number = 0): void {
     this.loading = true;
     this.error = '';
-    this.researchJournalService.listJournals(page, 20).subscribe({
+    this.researchJournalService.listVolumes(this.journalKey, page, 20).subscribe({
       next: (response) => {
-        this.journals = response.journals || [];
+        this.volumes = response.volumes || [];
         this.currentPage = response.currentPage || 0;
         this.totalPages = response.totalPages || 0;
         this.loading = false;
       },
       error: () => {
-        this.error = 'Failed to load journals';
+        this.error = 'Failed to load volumes';
         this.loading = false;
       }
     });
   }
 
   loadPage(page: number): void {
-    this.loadJournals(page);
+    this.loadVolumes(page);
   }
 
   onSubmit(): void {
-    if (this.journalForm.valid) {
+    if (this.volumeForm.valid) {
       this.loading = true;
-      const request: ResearchJournalRequest = this.journalForm.value;
+      const request: ResearchJournalVolumeRequest = {
+        ...this.volumeForm.value,
+        researchJournalId: 0 // Will be set by backend based on journalKey
+      };
 
-      if (this.editingJournal) {
-        this.researchJournalService.updateJournal(this.editingJournal.journalKey, request).subscribe({
+      if (this.editingVolume) {
+        this.researchJournalService.updateVolume(this.editingVolume.volumeKey, request).subscribe({
           next: () => {
             this.loading = false;
             this.cancelForm();
-            this.loadJournals(this.currentPage);
+            this.loadVolumes(this.currentPage);
           },
           error: () => {
-            this.error = 'Failed to update journal';
+            this.error = 'Failed to update volume';
             this.loading = false;
           }
         });
       } else {
-        this.researchJournalService.createJournal(request).subscribe({
+        this.researchJournalService.createVolume(this.journalKey, request).subscribe({
           next: () => {
             this.loading = false;
             this.cancelForm();
-            this.loadJournals();
+            this.loadVolumes();
           },
           error: () => {
-            this.error = 'Failed to create journal';
+            this.error = 'Failed to create volume';
             this.loading = false;
           }
         });
@@ -347,29 +356,27 @@ export class ResearchJournalsComponent implements OnInit {
     }
   }
 
-  editJournal(journal: ResearchJournalResponse): void {
-    this.editingJournal = journal;
-    this.journalForm.patchValue({
-      title: journal.title,
-      slug: journal.slug,
-      shortDescription: journal.shortDescription || '',
-      description: journal.description || '',
-      thumbnail: journal.thumbnail || '',
-      published: journal.published
+  editVolume(volume: ResearchJournalVolumeResponse): void {
+    this.editingVolume = volume;
+    this.volumeForm.patchValue({
+      title: volume.title,
+      volumeNumber: volume.volumeNumber || null,
+      year: volume.year || null,
+      published: volume.published
     });
     this.showCreateForm = true;
   }
 
-  deleteJournal(journal: ResearchJournalResponse): void {
-    if (confirm(`Delete "${journal.title}"?`)) {
+  deleteVolume(volume: ResearchJournalVolumeResponse): void {
+    if (confirm(`Delete "${volume.title}"?`)) {
       this.loading = true;
-      this.researchJournalService.deleteJournal(journal.journalKey).subscribe({
+      this.researchJournalService.deleteVolume(volume.volumeKey).subscribe({
         next: () => {
           this.loading = false;
-          this.loadJournals(this.currentPage);
+          this.loadVolumes(this.currentPage);
         },
         error: () => {
-          this.error = 'Failed to delete journal';
+          this.error = 'Failed to delete volume';
           this.loading = false;
         }
       });
@@ -378,8 +385,12 @@ export class ResearchJournalsComponent implements OnInit {
 
   cancelForm(): void {
     this.showCreateForm = false;
-    this.editingJournal = null;
-    this.journalForm.reset({ published: false });
+    this.editingVolume = null;
+    this.volumeForm.reset({ published: false });
+  }
+
+  goBack(): void {
+    window.history.back();
   }
 }
 

@@ -43,6 +43,11 @@ export const websiteRoutes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'widgets',
+    loadComponent: () => import('./widgets/widgets.component').then(m => m.WidgetsComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'notifications',
     loadComponent: () => import('./notifications/notifications.component').then(m => m.NotificationsComponent),
     canActivate: [authGuard]
