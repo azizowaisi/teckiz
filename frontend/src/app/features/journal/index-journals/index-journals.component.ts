@@ -8,7 +8,7 @@ import { IndexJournalResponse, IndexJournalRequest } from '../../../core/models/
 @Component({
   selector: 'app-index-journals',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   template: `
     <div class="journals-container">
       <div class="header">
