@@ -22,8 +22,8 @@ FROM nginx:alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy built app from build stage
-# Adjust path based on your angular.json outputPath configuration
-COPY --from=build /app/dist/*/browser /usr/share/nginx/html
+# Based on angular.json outputPath: dist/teckiz-frontend
+COPY --from=build /app/dist/teckiz-frontend/browser /usr/share/nginx/html
 
 # Expose port
 EXPOSE 80
