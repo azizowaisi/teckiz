@@ -3,6 +3,7 @@ package com.teckiz.repository;
 import com.teckiz.entity.Company;
 import com.teckiz.entity.ResearchArticle;
 import com.teckiz.entity.ResearchJournal;
+import com.teckiz.entity.ResearchJournalVolume;
 import com.teckiz.entity.ResearchRelatedMedia;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,8 @@ public interface ResearchRelatedMediaRepository extends JpaRepository<ResearchRe
     List<ResearchRelatedMedia> findByResearchArticle(ResearchArticle researchArticle);
 
     List<ResearchRelatedMedia> findByResearchJournal(ResearchJournal researchJournal);
+
+    List<ResearchRelatedMedia> findByResearchJournalVolume(ResearchJournalVolume volume);
 
     List<ResearchRelatedMedia> findByCompanyAndResearchArticle(Company company, ResearchArticle researchArticle);
 

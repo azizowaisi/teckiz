@@ -57,5 +57,17 @@ public class UtilHelper {
         }
         return password.toString();
     }
+
+    public static String generateSlug(String text) {
+        if (text == null || text.isEmpty()) {
+            return generateEntityKey().substring(0, Math.min(64, generateEntityKey().length()));
+        }
+        return text.toLowerCase()
+                .replaceAll("[^a-z0-9\\s-]", "")
+                .replaceAll("\\s+", "-")
+                .replaceAll("-+", "-")
+                .trim()
+                .substring(0, Math.min(64, text.length()));
+    }
 }
 
