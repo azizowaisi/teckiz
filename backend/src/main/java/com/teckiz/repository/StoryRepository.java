@@ -30,5 +30,7 @@ public interface StoryRepository extends JpaRepository<Story, Long> {
     List<Story> findByCompanyAndStoryType(Company company, StoryType storyType);
 
     List<Story> findByCompanyAndStoryTypeAndPublishedTrueAndArchivedFalse(Company company, StoryType storyType);
+
+    Page<Story> findByCompanyAndStoryTypeIdAndPublishedTrueAndArchivedFalse(Company company, Long storyTypeId, Pageable pageable);
 }
 

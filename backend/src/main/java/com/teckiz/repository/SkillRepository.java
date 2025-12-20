@@ -3,6 +3,8 @@ package com.teckiz.repository;
 import com.teckiz.entity.Company;
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.Skill;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -19,8 +21,14 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
 
     List<Skill> findByCompany(Company company, Sort sort);
 
+    Page<Skill> findByCompany(Company company, Pageable pageable);
+
     List<Skill> findByCompanyModuleMapper(CompanyModuleMapper companyModuleMapper);
 
     List<Skill> findByCompanyAndArchivedFalse(Company company, Sort sort);
+
+    List<Skill> findByCompanyAndArchivedFalse(Company company);
+
+    Page<Skill> findByCompanyAndArchivedFalse(Company company, Pageable pageable);
 }
 
