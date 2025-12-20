@@ -13,6 +13,16 @@ export const websiteRoutes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'news',
+    loadComponent: () => import('./news/news.component').then(m => m.NewsComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'events',
+    loadComponent: () => import('./events/events.component').then(m => m.EventsComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'notifications',
     loadComponent: () => import('./notifications/notifications.component').then(m => m.NotificationsComponent),
     canActivate: [authGuard]
