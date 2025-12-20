@@ -1,50 +1,48 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IndexJournalService } from '../../../core/services/indexjournal.service';
-import { IndexJournalResponse, IndexJournalRequest } from '../../../core/models/indexjournal.model';
+import { IndexJournalVolumeResponse, IndexJournalVolumeRequest, IndexJournalResponse } from '../../../core/models/indexjournal.model';
 
 @Component({
-  selector: 'app-index-journals',
+  selector: 'app-index-volumes',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   template: `
-    <div class="journals-container">
+    <div class="volumes-container">
       <div class="header">
-        <h1>Index Journals Management</h1>
-        <button class="btn btn-primary" (click)="showCreateForm = true">Create New Journal</button>
+        <h1>Index Journal Volumes: {{ journalTitle }}</h1>
+        <button class="btn btn-secondary" (click)="goBack()">Back to Journals</button>
+        <button class="btn btn-primary" (click)="showCreateForm = true">Create New Volume</button>
       </div>
 
-      <div *ngIf="showCreateForm || editingJournal" class="form-container">
-        <h2>{{ editingJournal ? 'Edit Index Journal' : 'Create New Index Journal' }}</h2>
-        <form [formGroup]="journalForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="showCreateForm || editingVolume" class="form-container">
+        <h2>{{ editingVolume ? 'Edit Volume' : 'Create New Volume' }}</h2>
+        <form [formGroup]="volumeForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
             <label>Title *</label>
             <input type="text" formControlName="title" />
-            <div *ngIf="journalForm.get('title')?.invalid && journalForm.get('title')?.touched" class="error">
+            <div *ngIf="volumeForm.get('title')?.invalid && volumeForm.get('title')?.touched" class="error">
               Title is required
             </div>
           </div>
 
-          <div class="form-group">
-            <label>Slug</label>
-            <input type="text" formControlName="slug" />
+          <div class="form-row">
+            <div class="form-group">
+              <label>Volume Number</label>
+              <input type="number" formControlName="volumeNumber" />
+            </div>
+            <div class="form-group">
+              <label>Issue Number</label>
+              <input type="number" formControlName="issueNumber" />
+            </div>
           </div>
 
           <div class="form-group">
-            <label>Short Description</label>
-            <textarea formControlName="shortDescription" rows="2"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>Description</label>
-            <textarea formControlName="description" rows="6"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>Thumbnail URL</label>
-            <input type="text" formControlName="thumbnail" />
+            <label>Published Date</label>
+            <input type="date" formControlName="publishedAt" />
           </div>
 
           <div class="form-group">
@@ -55,8 +53,8 @@ import { IndexJournalResponse, IndexJournalRequest } from '../../../core/models/
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="btn btn-primary" [disabled]="journalForm.invalid || loading">
-              {{ loading ? 'Saving...' : (editingJournal ? 'Update' : 'Create') }}
+            <button type="submit" class="btn btn-primary" [disabled]="volumeForm.invalid || loading">
+              {{ loading ? 'Saving...' : (editingVolume ? 'Update' : 'Create') }}
             </button>
             <button type="button" class="btn btn-secondary" (click)="cancelForm()">Cancel</button>
           </div>
@@ -64,32 +62,36 @@ import { IndexJournalResponse, IndexJournalRequest } from '../../../core/models/
       </div>
 
       <div *ngIf="error" class="error-message">{{ error }}</div>
-      <div *ngIf="loading && !showCreateForm" class="loading">Loading journals...</div>
+      <div *ngIf="loading && !showCreateForm" class="loading">Loading volumes...</div>
 
-      <div class="journals-list" *ngIf="journals.length > 0">
+      <div class="volumes-list" *ngIf="volumes.length > 0">
         <table>
           <thead>
             <tr>
               <th>Title</th>
-              <th>Slug</th>
+              <th>Volume #</th>
+              <th>Issue #</th>
+              <th>Published Date</th>
               <th>Status</th>
               <th>Updated</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let journal of journals">
-              <td>{{ journal.title }}</td>
-              <td>{{ journal.slug }}</td>
+            <tr *ngFor="let volume of volumes">
+              <td>{{ volume.title }}</td>
+              <td>{{ volume.volumeNumber || '-' }}</td>
+              <td>{{ volume.issueNumber || '-' }}</td>
+              <td>{{ volume.publishedAt | date:'short' }}</td>
               <td>
-                <span [class]="journal.published ? 'badge published' : 'badge draft'">
-                  {{ journal.published ? 'Published' : 'Draft' }}
+                <span [class]="volume.published ? 'badge published' : 'badge draft'">
+                  {{ volume.published ? 'Published' : 'Draft' }}
                 </span>
               </td>
-              <td>{{ journal.updatedAt | date:'short' }}</td>
+              <td>{{ volume.updatedAt | date:'short' }}</td>
               <td>
-                <button class="btn btn-sm btn-primary" (click)="editJournal(journal)">Edit</button>
-                <button class="btn btn-sm btn-danger" (click)="deleteJournal(journal)">Delete</button>
+                <button class="btn btn-sm btn-primary" (click)="editVolume(volume)">Edit</button>
+                <button class="btn btn-sm btn-danger" (click)="deleteVolume(volume)">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -104,7 +106,7 @@ import { IndexJournalResponse, IndexJournalRequest } from '../../../core/models/
     </div>
   `,
   styles: [`
-    .journals-container {
+    .volumes-container {
       padding: 20px;
     }
 
@@ -113,6 +115,7 @@ import { IndexJournalResponse, IndexJournalRequest } from '../../../core/models/
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
+      gap: 10px;
     }
 
     .form-container {
@@ -121,6 +124,12 @@ import { IndexJournalResponse, IndexJournalRequest } from '../../../core/models/
       border-radius: 8px;
       margin-bottom: 20px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
     }
 
     .form-group {
@@ -133,8 +142,7 @@ import { IndexJournalResponse, IndexJournalRequest } from '../../../core/models/
       font-weight: 500;
     }
 
-    .form-group input,
-    .form-group textarea {
+    .form-group input {
       width: 100%;
       padding: 8px;
       border: 1px solid #ddd;
@@ -148,7 +156,7 @@ import { IndexJournalResponse, IndexJournalRequest } from '../../../core/models/
       margin-top: 20px;
     }
 
-    .journals-list {
+    .volumes-list {
       background: white;
       border-radius: 8px;
       overflow: hidden;
@@ -210,13 +218,6 @@ import { IndexJournalResponse, IndexJournalRequest } from '../../../core/models/
       color: white;
     }
 
-    .btn-info {
-      background-color: #17a2b8;
-      color: white;
-      text-decoration: none;
-      display: inline-block;
-    }
-
     .btn-sm {
       padding: 4px 8px;
       font-size: 12px;
@@ -264,81 +265,98 @@ import { IndexJournalResponse, IndexJournalRequest } from '../../../core/models/
     }
   `]
 })
-export class IndexJournalsComponent implements OnInit {
-  journals: IndexJournalResponse[] = [];
+export class IndexVolumesComponent implements OnInit {
+  journalKey: string = '';
+  journalTitle: string = '';
+  volumes: IndexJournalVolumeResponse[] = [];
   loading = false;
   error = '';
   showCreateForm = false;
-  editingJournal: IndexJournalResponse | null = null;
-  journalForm: FormGroup;
+  editingVolume: IndexJournalVolumeResponse | null = null;
+  volumeForm: FormGroup;
   currentPage = 0;
   totalPages = 0;
 
   constructor(
+    private route: ActivatedRoute,
     private indexJournalService: IndexJournalService,
     private fb: FormBuilder
   ) {
-    this.journalForm = this.fb.group({
+    this.volumeForm = this.fb.group({
       title: ['', Validators.required],
-      slug: [''],
-      shortDescription: [''],
-      description: [''],
-      thumbnail: [''],
+      volumeNumber: [null],
+      issueNumber: [null],
+      publishedAt: [''],
       published: [false]
     });
   }
 
   ngOnInit(): void {
-    this.loadJournals();
+    this.journalKey = this.route.snapshot.paramMap.get('journalKey') || '';
+    if (this.journalKey) {
+      this.loadJournal();
+      this.loadVolumes();
+    }
   }
 
-  loadJournals(page: number = 0): void {
+  loadJournal(): void {
+    this.indexJournalService.getJournal(this.journalKey).subscribe({
+      next: (journal) => {
+        this.journalTitle = journal.title;
+      }
+    });
+  }
+
+  loadVolumes(page: number = 0): void {
     this.loading = true;
     this.error = '';
-    this.indexJournalService.listJournals(page, 20).subscribe({
+    this.indexJournalService.listVolumes(this.journalKey, page, 20).subscribe({
       next: (response) => {
-        this.journals = response.indexJournals || [];
+        this.volumes = response.volumes || [];
         this.currentPage = response.currentPage || 0;
         this.totalPages = response.totalPages || 0;
         this.loading = false;
       },
       error: () => {
-        this.error = 'Failed to load journals';
+        this.error = 'Failed to load volumes';
         this.loading = false;
       }
     });
   }
 
   loadPage(page: number): void {
-    this.loadJournals(page);
+    this.loadVolumes(page);
   }
 
   onSubmit(): void {
-    if (this.journalForm.valid) {
+    if (this.volumeForm.valid) {
       this.loading = true;
-      const request: IndexJournalRequest = this.journalForm.value;
+      const request: IndexJournalVolumeRequest = {
+        ...this.volumeForm.value,
+        indexJournalId: 0 // Will be set by backend based on journalKey
+      };
 
-      if (this.editingJournal) {
-        this.indexJournalService.updateJournal(this.editingJournal.journalKey, request).subscribe({
+      if (this.editingVolume) {
+        this.indexJournalService.updateVolume(this.editingVolume.volumeKey, request).subscribe({
           next: () => {
             this.loading = false;
             this.cancelForm();
-            this.loadJournals(this.currentPage);
+            this.loadVolumes(this.currentPage);
           },
           error: () => {
-            this.error = 'Failed to update journal';
+            this.error = 'Failed to update volume';
             this.loading = false;
           }
         });
       } else {
-        this.indexJournalService.createJournal(request).subscribe({
+        this.indexJournalService.createVolume(this.journalKey, request).subscribe({
           next: () => {
             this.loading = false;
             this.cancelForm();
-            this.loadJournals();
+            this.loadVolumes();
           },
           error: () => {
-            this.error = 'Failed to create journal';
+            this.error = 'Failed to create volume';
             this.loading = false;
           }
         });
@@ -346,29 +364,28 @@ export class IndexJournalsComponent implements OnInit {
     }
   }
 
-  editJournal(journal: IndexJournalResponse): void {
-    this.editingJournal = journal;
-    this.journalForm.patchValue({
-      title: journal.title,
-      slug: journal.slug,
-      shortDescription: journal.shortDescription || '',
-      description: journal.description || '',
-      thumbnail: journal.thumbnail || '',
-      published: journal.published
+  editVolume(volume: IndexJournalVolumeResponse): void {
+    this.editingVolume = volume;
+    this.volumeForm.patchValue({
+      title: volume.title,
+      volumeNumber: volume.volumeNumber || null,
+      issueNumber: volume.issueNumber || null,
+      publishedAt: volume.publishedAt ? new Date(volume.publishedAt).toISOString().split('T')[0] : '',
+      published: volume.published
     });
     this.showCreateForm = true;
   }
 
-  deleteJournal(journal: IndexJournalResponse): void {
-    if (confirm(`Delete "${journal.title}"?`)) {
+  deleteVolume(volume: IndexJournalVolumeResponse): void {
+    if (confirm(`Delete "${volume.title}"?`)) {
       this.loading = true;
-      this.indexJournalService.deleteJournal(journal.journalKey).subscribe({
+      this.indexJournalService.deleteVolume(volume.volumeKey).subscribe({
         next: () => {
           this.loading = false;
-          this.loadJournals(this.currentPage);
+          this.loadVolumes(this.currentPage);
         },
         error: () => {
-          this.error = 'Failed to delete journal';
+          this.error = 'Failed to delete volume';
           this.loading = false;
         }
       });
@@ -377,8 +394,12 @@ export class IndexJournalsComponent implements OnInit {
 
   cancelForm(): void {
     this.showCreateForm = false;
-    this.editingJournal = null;
-    this.journalForm.reset({ published: false });
+    this.editingVolume = null;
+    this.volumeForm.reset({ published: false });
+  }
+
+  goBack(): void {
+    window.history.back();
   }
 }
 

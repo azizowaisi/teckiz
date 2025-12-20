@@ -113,6 +113,10 @@ export const routes: Routes = [
       {
         path: 'index-articles',
         loadComponent: () => import('./features/journal/index-articles/index-articles.component').then(m => m.IndexArticlesComponent)
+      },
+      {
+        path: 'index-journals/:journalKey/volumes',
+        loadComponent: () => import('./features/journal/index-volumes/index-volumes.component').then(m => m.IndexVolumesComponent)
       }
     ]
   },
