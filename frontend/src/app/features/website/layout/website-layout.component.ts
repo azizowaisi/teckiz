@@ -2,36 +2,48 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
-  selector: 'app-super-admin-dashboard',
+  selector: 'app-website-layout',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   template: `
-    <div class="dashboard-container">
+    <div class="layout-container">
       <nav class="sidebar">
         <div class="sidebar-header">
-          <h3>Teckiz</h3>
+          <h3>Website Management</h3>
         </div>
         <ul class="nav-menu">
           <li>
-            <a routerLink="/superadmin/index" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-              Overview
+            <a routerLink="/website" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+              Dashboard
             </a>
           </li>
           <li>
-            <a routerLink="/superadmin/companies" routerLinkActive="active">
-              Companies
+            <a routerLink="/website/pages" routerLinkActive="active">
+              Pages
             </a>
           </li>
           <li>
-            <a routerLink="/superadmin/users" routerLinkActive="active">
-              Users
+            <a routerLink="/website/news" routerLinkActive="active">
+              News
             </a>
           </li>
           <li>
-            <a routerLink="/superadmin/modules" routerLinkActive="active">
-              Modules
+            <a routerLink="/website/events" routerLinkActive="active">
+              Events
+            </a>
+          </li>
+          <li>
+            <a routerLink="/website/albums" routerLinkActive="active">
+              Albums
+            </a>
+          </li>
+          <li>
+            <a routerLink="/website/notifications" routerLinkActive="active">
+              Notifications
+              <span *ngIf="unreadCount > 0" class="badge">{{ unreadCount }}</span>
             </a>
           </li>
         </ul>
@@ -39,6 +51,12 @@ import { AuthService } from '../../../core/services/auth.service';
           <div class="user-info">
             <p>{{ currentUser?.name }}</p>
             <p class="user-email">{{ currentUser?.email }}</p>
+          </div>
+          <div class="notifications">
+            <a routerLink="/website/notifications" class="notification-bell">
+              🔔
+              <span *ngIf="unreadCount > 0" class="badge">{{ unreadCount }}</span>
+            </a>
           </div>
           <button class="btn btn-secondary" (click)="logout()">Logout</button>
         </div>
@@ -49,7 +67,7 @@ import { AuthService } from '../../../core/services/auth.service';
     </div>
   `,
   styles: [`
-    .dashboard-container {
+    .layout-container {
       display: flex;
       min-height: 100vh;
     }
@@ -113,17 +131,66 @@ import { AuthService } from '../../../core/services/auth.service';
       color: #bdc3c7;
     }
 
+    .notifications {
+      margin-bottom: 15px;
+    }
+
+    .notification-bell {
+      position: relative;
+      display: inline-block;
+      font-size: 20px;
+      text-decoration: none;
+      color: white;
+    }
+
+    .notification-bell .badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #dc3545;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
     .main-content {
       flex: 1;
       padding: 30px;
       background-color: #f5f5f5;
     }
+
+    .btn {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
   `]
 })
-export class SuperAdminDashboardComponent {
+export class WebsiteLayoutComponent {
   currentUser = this.authService.getCurrentUser();
+  unreadCount = 0;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private notificationService: NotificationService
+  ) {
+    this.notificationService.unreadCount$.subscribe(count => {
+      this.unreadCount = count;
+    });
+  }
 
   logout(): void {
     this.authService.logout();

@@ -11,17 +11,24 @@ export const routes: Routes = [
     path: 'superadmin',
     component: SuperAdminDashboardComponent,
     canActivate: [authGuard, superAdminGuard],
-    children: [
-      { path: '', redirectTo: 'index', pathMatch: 'full' },
-      { path: 'index', loadComponent: () => import('./features/super-admin/index/super-admin-index.component').then(m => m.SuperAdminIndexComponent) },
-      { path: 'users', loadComponent: () => import('./features/super-admin/users/users.component').then(m => m.UsersComponent) },
-      { path: 'modules', loadComponent: () => import('./features/super-admin/modules/modules.component').then(m => m.ModulesComponent) },
-    ]
+      children: [
+        { path: '', redirectTo: 'index', pathMatch: 'full' },
+        { path: 'index', loadComponent: () => import('./features/super-admin/index/super-admin-index.component').then(m => m.SuperAdminIndexComponent) },
+        { path: 'companies', loadComponent: () => import('./features/super-admin/companies/companies.component').then(m => m.CompaniesComponent) },
+        { path: 'users', loadComponent: () => import('./features/super-admin/users/users.component').then(m => m.UsersComponent) },
+        { path: 'modules', loadComponent: () => import('./features/super-admin/modules/modules.component').then(m => m.ModulesComponent) },
+      ]
   },
   {
     path: 'website',
-    loadChildren: () => import('./features/website/website.routes').then(m => m.websiteRoutes),
-    canActivate: [authGuard]
+    loadComponent: () => import('./features/website/layout/website-layout.component').then(m => m.WebsiteLayoutComponent),
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./features/website/website.routes').then(m => m.websiteRoutes)
+      }
+    ]
   },
   { path: '**', redirectTo: '/login' }
 ];
