@@ -33,6 +33,8 @@ public class CompanyController {
     private final CompanyModuleMapperRepository companyModuleMapperRepository;
 
     @GetMapping
+    @io.swagger.v3.oas.annotations.Operation(summary = "List all companies", description = "Get list of all active companies")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Companies retrieved successfully")
     public ResponseEntity<Map<String, Object>> getAllCompanies() {
         List<Company> companies = companyRepository.findAllActiveCompanies();
         List<CompanyResponse> companyResponses = companies.stream()
@@ -80,6 +82,11 @@ public class CompanyController {
     }
 
     @PutMapping("/{companyKey}")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Update company", description = "Update an existing company")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Company updated successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Company not found")
+    })
     public ResponseEntity<?> updateCompany(
             @PathVariable String companyKey,
             @RequestBody CompanyRequest request) {
