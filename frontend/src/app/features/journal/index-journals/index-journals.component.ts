@@ -88,6 +88,7 @@ import { IndexJournalResponse, IndexJournalRequest } from '../../../core/models/
               </td>
               <td>{{ journal.updatedAt | date:'short' }}</td>
               <td>
+                <a [routerLink]="['/journal/index-journals', journal.journalKey, 'volumes']" class="btn btn-sm btn-info">Volumes</a>
                 <button class="btn btn-sm btn-primary" (click)="editJournal(journal)">Edit</button>
                 <button class="btn btn-sm btn-danger" (click)="deleteJournal(journal)">Delete</button>
               </td>

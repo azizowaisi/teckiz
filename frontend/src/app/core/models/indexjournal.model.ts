@@ -40,7 +40,7 @@ export interface IndexJournalVolume {
   volumeKey: string;
   title: string;
   volumeNumber?: number;
-  year?: number;
+  issueNumber?: number;
   indexJournalId: number;
   published: boolean;
   archived: boolean;
@@ -52,7 +52,7 @@ export interface IndexJournalVolume {
 export interface IndexJournalVolumeRequest {
   title: string;
   volumeNumber?: number;
-  year?: number;
+  issueNumber?: number;
   indexJournalId: number;
   published?: boolean;
   publishedAt?: string;
@@ -63,7 +63,7 @@ export interface IndexJournalVolumeResponse {
   volumeKey: string;
   title: string;
   volumeNumber?: number;
-  year?: number;
+  issueNumber?: number;
   indexJournalId: number;
   published: boolean;
   archived: boolean;
