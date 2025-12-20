@@ -1,4 +1,4 @@
-package com.teckiz.controller.admin.superadmin;
+package com.teckiz.controller.superadmin;
 
 import com.teckiz.entity.Company;
 import com.teckiz.entity.EmailTemplate;

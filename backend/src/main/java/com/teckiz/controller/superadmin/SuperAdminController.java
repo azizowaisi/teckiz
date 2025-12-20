@@ -1,4 +1,4 @@
-package com.teckiz.controller.admin.superadmin;
+package com.teckiz.controller.superadmin;
 
 import com.teckiz.entity.Module;
 import com.teckiz.entity.User;

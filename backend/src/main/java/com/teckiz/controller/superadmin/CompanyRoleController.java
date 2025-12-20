@@ -1,4 +1,4 @@
-package com.teckiz.controller.admin.superadmin;
+package com.teckiz.controller.superadmin;
 
 import com.teckiz.dto.AddRoleToCompanyRequest;
 import com.teckiz.dto.CompanyRoleMapperResponse;
