@@ -23,6 +23,21 @@ export const websiteRoutes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'albums',
+    loadComponent: () => import('./albums/albums.component').then(m => m.AlbumsComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'contacts',
+    loadComponent: () => import('./contacts/contacts.component').then(m => m.ContactsComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'subscribers',
+    loadComponent: () => import('./subscribers/subscribers.component').then(m => m.SubscribersComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'notifications',
     loadComponent: () => import('./notifications/notifications.component').then(m => m.NotificationsComponent),
     canActivate: [authGuard]
