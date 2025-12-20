@@ -31,6 +31,12 @@ public interface ProgramCourseRepository extends JpaRepository<ProgramCourse, Lo
 
     List<ProgramCourse> findByCompanyAndProgramLevel(Company company, ProgramLevel programLevel);
 
+    Page<ProgramCourse> findByCompanyAndProgramLevel(Company company, ProgramLevel programLevel, Pageable pageable);
+
+    List<ProgramCourse> findByCompanyAndProgramLevelAndPublishedTrueAndArchivedFalse(Company company, ProgramLevel programLevel);
+
+    Page<ProgramCourse> findByCompanyAndProgramLevelAndPublishedTrueAndArchivedFalse(Company company, ProgramLevel programLevel, Pageable pageable);
+
     Optional<ProgramCourse> findByCompanyAndCode(Company company, String code);
 }
 
