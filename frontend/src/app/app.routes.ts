@@ -51,6 +51,18 @@ export const routes: Routes = [
       {
         path: 'principal-message',
         loadComponent: () => import('./features/education/principal-message/principal-message.component').then(m => m.PrincipalMessageComponent)
+      },
+      {
+        path: 'program-levels',
+        loadComponent: () => import('./features/education/program-levels/program-levels.component').then(m => m.ProgramLevelsComponent)
+      },
+      {
+        path: 'program-courses',
+        loadComponent: () => import('./features/education/program-courses/program-courses.component').then(m => m.ProgramCoursesComponent)
+      },
+      {
+        path: 'program-classes',
+        loadComponent: () => import('./features/education/program-classes/program-classes.component').then(m => m.ProgramClassesComponent)
       }
     ]
   },

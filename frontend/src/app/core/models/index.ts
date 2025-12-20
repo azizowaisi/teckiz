@@ -13,5 +13,6 @@ export * from './facility.model';
 export * from './story.model';
 export * from './skill.model';
 export * from './principalmessage.model';
+export * from './program.model';
 export * from './notification.model';
 
