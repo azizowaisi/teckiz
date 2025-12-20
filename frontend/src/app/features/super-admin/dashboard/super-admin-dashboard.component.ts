@@ -34,6 +34,11 @@ import { AuthService } from '../../../core/services/auth.service';
               Modules
             </a>
           </li>
+          <li>
+            <a routerLink="/superadmin/email-templates" routerLinkActive="active">
+              Email Templates
+            </a>
+          </li>
         </ul>
         <div class="sidebar-footer">
           <div class="user-info">

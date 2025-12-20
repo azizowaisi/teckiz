@@ -18,6 +18,7 @@ export const routes: Routes = [
         { path: 'companies/:companyKey/users', loadComponent: () => import('./features/super-admin/company-users/company-users.component').then(m => m.CompanyUsersComponent) },
         { path: 'users', loadComponent: () => import('./features/super-admin/users/users.component').then(m => m.UsersComponent) },
         { path: 'modules', loadComponent: () => import('./features/super-admin/modules/modules.component').then(m => m.ModulesComponent) },
+        { path: 'email-templates', loadComponent: () => import('./features/super-admin/email-templates/email-templates.component').then(m => m.EmailTemplatesComponent) },
       ]
   },
   {
@@ -78,6 +79,14 @@ export const routes: Routes = [
       {
         path: 'research-articles',
         loadComponent: () => import('./features/journal/research-articles/research-articles.component').then(m => m.ResearchArticlesComponent)
+      },
+      {
+        path: 'index-journals',
+        loadComponent: () => import('./features/journal/index-journals/index-journals.component').then(m => m.IndexJournalsComponent)
+      },
+      {
+        path: 'index-articles',
+        loadComponent: () => import('./features/journal/index-articles/index-articles.component').then(m => m.IndexArticlesComponent)
       }
     ]
   },
