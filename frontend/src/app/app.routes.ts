@@ -66,6 +66,21 @@ export const routes: Routes = [
       }
     ]
   },
+  {
+    path: 'journal',
+    loadComponent: () => import('./features/website/layout/website-layout.component').then(m => m.WebsiteLayoutComponent),
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'research-journals',
+        loadComponent: () => import('./features/journal/research-journals/research-journals.component').then(m => m.ResearchJournalsComponent)
+      },
+      {
+        path: 'research-articles',
+        loadComponent: () => import('./features/journal/research-articles/research-articles.component').then(m => m.ResearchArticlesComponent)
+      }
+    ]
+  },
   { path: '**', redirectTo: '/login' }
 ];
 

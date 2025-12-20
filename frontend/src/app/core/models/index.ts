@@ -14,5 +14,8 @@ export * from './story.model';
 export * from './skill.model';
 export * from './principalmessage.model';
 export * from './program.model';
+export * from './researchjournal.model';
+export * from './researcharticle.model';
+export * from './indexjournal.model';
 export * from './notification.model';
 
