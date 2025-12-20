@@ -56,8 +56,8 @@ Teckiz is a full-featured content management system designed for educational ins
 ## 🛠️ Technology Stack
 
 ### Backend
-- **Framework**: Spring Boot 3.4.1
-- **Language**: Java 23
+- **Framework**: Spring Boot 3.3.5
+- **Language**: Java 21 (LTS)
 - **Database**: JPA/Hibernate
 - **Security**: Spring Security + JWT
 - **Cloud Services**: AWS S3 (storage), AWS SES (email)
