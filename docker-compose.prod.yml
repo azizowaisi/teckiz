@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  database:
+    image: mysql:8.0
+    container_name: teckiz-database-prod
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-teckiz}
+      MYSQL_USER: ${MYSQL_USER:-teckiz}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data_prod:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - teckiz-network-prod
+    # Don't expose ports in production (use internal network only)
+    # ports:
+    #   - "3306:3306"
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: teckiz-backend-prod
+    restart: always
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    environment:
+      # Database configuration
+      DATABASE_URL: jdbc:mysql://database:3306/${MYSQL_DATABASE:-teckiz}?useSSL=true&serverTimezone=UTC
+      DATABASE_USERNAME: ${MYSQL_USER:-teckiz}
+      DATABASE_PASSWORD: ${MYSQL_PASSWORD}
+      
+      # JWT configuration (must be set)
+      JWT_SECRET: ${JWT_SECRET}
+      
+      # AWS configuration (required for file uploads and emails)
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET}
+      
+      # Email configuration
+      EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS:-noreply@teckiz.com}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Teckiz}
+      
+      # Application configuration
+      IS_DEV_ENV: false
+      JPA_DDL_AUTO: validate
+      JPA_SHOW_SQL: false
+      SERVER_PORT: 8080
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - teckiz-network-prod
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Angular Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - API_URL=${API_URL:-https://api.teckiz.com/api}
+    container_name: teckiz-frontend-prod
+    restart: always
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    depends_on:
+      - backend
+    networks:
+      - teckiz-network-prod
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+networks:
+  teckiz-network-prod:
+    driver: bridge
+
+volumes:
+  mysql_data_prod:
+    driver: local
+

@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  database:
+    image: mysql:8.0
+    container_name: teckiz-database-dev
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: teckiz
+      MYSQL_USER: teckiz
+      MYSQL_PASSWORD: teckizpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data_dev:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - teckiz-network-dev
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: teckiz-backend-dev
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: jdbc:mysql://database:3306/teckiz?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      DATABASE_USERNAME: teckiz
+      DATABASE_PASSWORD: teckizpassword
+      JWT_SECRET: YWJjZGVmZ2hpamsKa2xtbm9wcXJzdHV2d3h5egpBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWg==
+      JPA_DDL_AUTO: update
+      JPA_SHOW_SQL: true
+      IS_DEV_ENV: true
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - teckiz-network-dev
+    volumes:
+      # Mount source code for hot reload (optional, requires dev tools)
+      - ./backend/src:/app/src
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Angular Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: teckiz-frontend-dev
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    environment:
+      - API_URL=http://localhost:8080/api
+    depends_on:
+      - backend
+    networks:
+      - teckiz-network-dev
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+networks:
+  teckiz-network-dev:
+    driver: bridge
+
+volumes:
+  mysql_data_dev:
+    driver: local
+
