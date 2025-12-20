@@ -7,7 +7,7 @@ import { CompanyResponse, CompanyRequest } from '../../../core/models/company.mo
 @Component({
   selector: 'app-companies',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   template: `
     <div class="companies-container">
       <div class="header">
@@ -105,6 +105,7 @@ import { CompanyResponse, CompanyRequest } from '../../../core/models/company.mo
               </td>
               <td>{{ company.createdAt | date:'short' }}</td>
               <td>
+                <a [routerLink]="['/superadmin/companies', company.companyKey, 'users']" class="btn btn-sm btn-info">Users</a>
                 <button class="btn btn-sm btn-primary" (click)="editCompany(company)">Edit</button>
                 <button class="btn btn-sm btn-danger" (click)="deleteCompany(company)">Delete</button>
               </td>
@@ -218,6 +219,13 @@ import { CompanyResponse, CompanyRequest } from '../../../core/models/company.mo
     .btn-danger {
       background-color: #dc3545;
       color: white;
+    }
+
+    .btn-info {
+      background-color: #17a2b8;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
     }
 
     .btn-sm {

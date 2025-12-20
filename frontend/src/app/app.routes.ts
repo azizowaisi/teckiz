@@ -15,6 +15,7 @@ export const routes: Routes = [
         { path: '', redirectTo: 'index', pathMatch: 'full' },
         { path: 'index', loadComponent: () => import('./features/super-admin/index/super-admin-index.component').then(m => m.SuperAdminIndexComponent) },
         { path: 'companies', loadComponent: () => import('./features/super-admin/companies/companies.component').then(m => m.CompaniesComponent) },
+        { path: 'companies/:companyKey/users', loadComponent: () => import('./features/super-admin/company-users/company-users.component').then(m => m.CompanyUsersComponent) },
         { path: 'users', loadComponent: () => import('./features/super-admin/users/users.component').then(m => m.UsersComponent) },
         { path: 'modules', loadComponent: () => import('./features/super-admin/modules/modules.component').then(m => m.ModulesComponent) },
       ]
