@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProgramTermService } from '../../../core/services/programterm.service';
 import { ProgramService } from '../../../core/services/program.service';
-import { ProgramTermResponse, ProgramTermRequest, ProgramLevelResponse } from '../../../core/models/programterm.model';
+import { ProgramTermResponse, ProgramTermRequest } from '../../../core/models/programterm.model';
+import { ProgramLevelResponse } from '../../../core/models/program.model';
 
 @Component({
   selector: 'app-program-terms',
