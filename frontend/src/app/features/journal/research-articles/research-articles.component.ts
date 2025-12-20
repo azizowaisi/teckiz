@@ -275,6 +275,13 @@ import { ResearchJournalResponse } from '../../../core/models/researchjournal.mo
       color: white;
     }
 
+    .btn-info {
+      background-color: #17a2b8;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+    }
+
     .btn-sm {
       padding: 4px 8px;
       font-size: 12px;
