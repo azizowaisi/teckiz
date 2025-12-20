@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
+import { UserService } from '../../../core/services/user.service';
+import { User } from '../../../core/models/user.model';
 
 interface User {
   id: number;
@@ -14,10 +14,16 @@ interface User {
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="users-container">
-      <h1>Users Management</h1>
+      <div class="header">
+        <h1>Users Management</h1>
+        <div class="search-box">
+          <input type="text" [(ngModel)]="searchTerm" placeholder="Search users..." (keyup.enter)="onSearch()" />
+          <button class="btn btn-primary" (click)="onSearch()">Search</button>
+        </div>
+      </div>
       <div *ngIf="loading" class="loading">Loading users...</div>
       <div *ngIf="error" class="error-message">{{ error }}</div>
       <table *ngIf="users.length > 0" class="users-table">
@@ -45,6 +51,36 @@ interface User {
   styles: [`
     .users-container {
       padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-box input {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      color: white;
     }
 
     .users-table {
@@ -77,8 +113,9 @@ export class UsersComponent implements OnInit {
   users: User[] = [];
   loading = false;
   error = '';
+  searchTerm = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -86,16 +123,19 @@ export class UsersComponent implements OnInit {
 
   loadUsers(): void {
     this.loading = true;
-    this.http.get<{ users: User[] }>(`${environment.apiUrl}/superadmin/users`).subscribe({
+    this.userService.getAllUsers(this.searchTerm).subscribe({
       next: (response) => {
         this.users = response.users || [];
         this.loading = false;
       },
-      error: (error) => {
+      error: () => {
         this.error = 'Failed to load users';
         this.loading = false;
       }
     });
   }
-}
+
+  onSearch(): void {
+    this.loadUsers();
+  }
 

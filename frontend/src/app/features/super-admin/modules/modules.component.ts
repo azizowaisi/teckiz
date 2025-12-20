@@ -96,5 +96,10 @@ export class ModulesComponent implements OnInit {
       }
     });
   }
+
+  toggleModule(module: Module): void {
+    // This would need backend support to toggle module active status
+    console.log('Toggle module:', module);
+  }
 }
 
