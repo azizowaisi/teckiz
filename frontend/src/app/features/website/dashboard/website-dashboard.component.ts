@@ -17,22 +17,22 @@ import { WebsiteService } from '../../../core/services/website.service';
       <div *ngIf="stats" class="stats-grid">
         <div class="stat-card">
           <h3>Pages</h3>
-          <p class="stat-number">{{ stats.pagesCount || 0 }}</p>
+          <p class="stat-number">{{ stats.stats?.totalPages || 0 }}</p>
           <a routerLink="/website/pages">Manage Pages</a>
         </div>
         <div class="stat-card">
           <h3>News</h3>
-          <p class="stat-number">{{ stats.newsCount || 0 }}</p>
+          <p class="stat-number">{{ stats.stats?.totalNews || 0 }}</p>
           <a routerLink="/website/news">Manage News</a>
         </div>
         <div class="stat-card">
           <h3>Events</h3>
-          <p class="stat-number">{{ stats.eventsCount || 0 }}</p>
+          <p class="stat-number">{{ stats.stats?.totalEvents || 0 }}</p>
           <a routerLink="/website/events">Manage Events</a>
         </div>
         <div class="stat-card">
           <h3>Albums</h3>
-          <p class="stat-number">{{ stats.albumsCount || 0 }}</p>
+          <p class="stat-number">{{ stats.stats?.totalAlbums || 0 }}</p>
           <a routerLink="/website/albums">Manage Albums</a>
         </div>
       </div>
