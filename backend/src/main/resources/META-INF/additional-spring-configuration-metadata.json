@@ -1,0 +1,45 @@
+{
+  "properties": [
+    {
+      "name": "app.name",
+      "type": "java.lang.String",
+      "description": "Application name"
+    },
+    {
+      "name": "app.version",
+      "type": "java.lang.String",
+      "description": "Application version"
+    },
+    {
+      "name": "app.is-dev-env",
+      "type": "java.lang.Boolean",
+      "description": "Whether the application is running in development environment"
+    },
+    {
+      "name": "app.dev-env-email",
+      "type": "java.lang.String",
+      "description": "Development environment email override"
+    },
+    {
+      "name": "app.aws.region",
+      "type": "java.lang.String",
+      "description": "AWS region"
+    },
+    {
+      "name": "app.aws.access-key",
+      "type": "java.lang.String",
+      "description": "AWS access key"
+    },
+    {
+      "name": "app.aws.secret-key",
+      "type": "java.lang.String",
+      "description": "AWS secret key"
+    },
+    {
+      "name": "app.aws.s3.bucket-name",
+      "type": "java.lang.String",
+      "description": "AWS S3 bucket name"
+    }
+  ]
+}
+
