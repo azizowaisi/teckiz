@@ -60,14 +60,13 @@ public class PrincipalMessageController {
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
 
             PrincipalMessage message = new PrincipalMessage();
-                .company(companyModuleMapper.getCompany())
-                .companyModuleMapper(companyModuleMapper)
-                .title(request.getTitle())
-                .message(request.getMessage())
-                .principalName(request.getPrincipalName())
-                .principalImage(request.getPrincipalImage())
-                .published(request.getPublished() != null ? request.getPublished() : false)
-                .build();
+        message.setCompany(companyModuleMapper.getCompany());
+        message.setCompanyModuleMapper(companyModuleMapper);
+        message.setTitle(request.getTitle());
+        message.setMessage(request.getMessage());
+        message.setPrincipalName(request.getPrincipalName());
+        message.setPrincipalImage(request.getPrincipalImage());
+        message.setPublished(request.getPublished() != null ? request.getPublished() : false);
 
         message = messageRepository.save(message);
 
