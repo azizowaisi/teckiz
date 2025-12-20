@@ -38,6 +38,11 @@ export const websiteRoutes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'media',
+    loadComponent: () => import('./media/media.component').then(m => m.MediaComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'notifications',
     loadComponent: () => import('./notifications/notifications.component').then(m => m.NotificationsComponent),
     canActivate: [authGuard]

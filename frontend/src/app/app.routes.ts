@@ -31,6 +31,17 @@ export const routes: Routes = [
       }
     ]
   },
+  {
+    path: 'education',
+    loadComponent: () => import('./features/website/layout/website-layout.component').then(m => m.WebsiteLayoutComponent),
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'facilities',
+        loadComponent: () => import('./features/education/facilities/facilities.component').then(m => m.FacilitiesComponent)
+      }
+    ]
+  },
   { path: '**', redirectTo: '/login' }
 ];
 

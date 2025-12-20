@@ -8,5 +8,7 @@ export * from './webevent.model';
 export * from './webalbum.model';
 export * from './webcontact.model';
 export * from './websubscriber.model';
+export * from './webmedia.model';
+export * from './facility.model';
 export * from './notification.model';
 
