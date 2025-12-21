@@ -1,4 +1,5 @@
 package com.teckiz.controller.admin.journal;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.ResearchArticleAuthor;

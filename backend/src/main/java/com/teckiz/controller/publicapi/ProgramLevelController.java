@@ -1,4 +1,5 @@
 package com.teckiz.controller.publicapi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.dto.ProgramLevelResponse;
 import com.teckiz.entity.CompanyModuleMapper;
@@ -19,8 +20,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@Tag(name = "Public - ProgramLevel", description = "Public API endpoints for ProgramLevel")
 @RequestMapping("/public/program-levels")
 @RequiredArgsConstructor
+@org.springframework.stereotype.Component("publicProgramLevelController")
 public class ProgramLevelController {
 
     private final WebsiteManager websiteManager;

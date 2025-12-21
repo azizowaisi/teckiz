@@ -1,4 +1,5 @@
 package com.teckiz.controller.admin.education;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.dto.FacilityRequest;
 import com.teckiz.dto.FacilityResponse;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/education/admin/facilities")
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'COMPANY_AUTHOR')")
+@org.springframework.stereotype.Component("adminFacilityController")
 public class FacilityController {
 
     private final ModuleAccessManager moduleAccessManager;

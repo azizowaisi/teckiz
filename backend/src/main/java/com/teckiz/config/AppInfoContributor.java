@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class InfoContributor implements InfoContributor {
+public class AppInfoContributor implements InfoContributor {
 
     private final Environment environment;
 
-    public InfoContributor(Environment environment) {
+    public AppInfoContributor(Environment environment) {
         this.environment = environment;
     }
 

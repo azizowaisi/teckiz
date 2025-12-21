@@ -2,7 +2,9 @@ package com.teckiz.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.*;
@@ -28,9 +30,10 @@ public class EmailService {
     @Value("${app.email.from-name:Teckiz}")
     private String fromName;
 
-    private final SesClient sesClient; // Can be null if SES not configured
+    private SesClient sesClient; // Can be null if SES not configured
 
-    public EmailService(SesClient sesClient) {
+    @Autowired(required = false)
+    public void setSesClient(@Nullable SesClient sesClient) {
         this.sesClient = sesClient; // Can be null if SES not configured
     }
 

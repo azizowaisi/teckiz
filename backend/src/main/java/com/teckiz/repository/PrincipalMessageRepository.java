@@ -20,8 +20,6 @@ public interface PrincipalMessageRepository extends JpaRepository<PrincipalMessa
 
     Optional<PrincipalMessage> findByCompanyAndPublishedTrue(Company company);
 
-    Optional<PrincipalMessage> findByCompanyAndPublishedTrueAndArchivedFalse(Company company);
-
     Optional<PrincipalMessage> findByCompanyModuleMapperAndPublishedTrue(CompanyModuleMapper companyModuleMapper);
 }
 

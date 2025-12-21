@@ -1,6 +1,7 @@
 package com.teckiz.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -20,13 +21,11 @@ public class S3Config {
     @Value("${app.aws.region:us-east-1}")
     private String region;
 
-    @Value("${file.upload.use-s3:false}")
-    private Boolean useS3;
-
     @Bean
+    @ConditionalOnProperty(name = "file.upload.use-s3", havingValue = "true")
     public S3Client s3Client() {
-        if (!useS3 || accessKey == null || accessKey.isEmpty()) {
-            return null; // S3 not configured
+        if (accessKey == null || accessKey.isEmpty() || secretKey == null || secretKey.isEmpty()) {
+            throw new IllegalStateException("AWS credentials are required when use-s3 is enabled");
         }
 
         AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(accessKey, secretKey);

@@ -1,4 +1,5 @@
 package com.teckiz.controller.publicapi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.WebNews;
@@ -15,8 +16,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@Tag(name = "Public - WebNews", description = "Public API endpoints for WebNews")
 @RequestMapping("/public/news")
 @RequiredArgsConstructor
+@org.springframework.stereotype.Component("publicWebNewsController")
 public class WebNewsController {
 
     private final WebsiteManager websiteManager;

@@ -2,7 +2,9 @@ package com.teckiz.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -33,9 +35,10 @@ public class FileUploadService {
     @Value("${file.upload.use-s3:false}")
     private Boolean useS3;
 
-    private final S3Client s3Client; // Optional - can be null if S3 not configured
+    private S3Client s3Client; // Optional - can be null if S3 not configured
 
-    public FileUploadService(S3Client s3Client) {
+    @Autowired(required = false)
+    public void setS3Client(@Nullable S3Client s3Client) {
         this.s3Client = s3Client; // Can be null if S3 not configured
     }
 

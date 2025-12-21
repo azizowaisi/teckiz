@@ -1,4 +1,5 @@
 package com.teckiz.controller.publicapi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.ResearchArticle;
@@ -20,8 +21,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@Tag(name = "Public - ResearchArticle", description = "Public API endpoints for ResearchArticle")
 @RequestMapping("/public/journal/articles")
 @RequiredArgsConstructor
+@org.springframework.stereotype.Component("publicResearchArticleController")
 public class ResearchArticleController {
 
     private final WebsiteManager websiteManager;

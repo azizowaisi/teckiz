@@ -1,4 +1,5 @@
 package com.teckiz.controller.publicapi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.IndexJournal;
@@ -13,8 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@Tag(name = "Public - IndexJournal", description = "Public API endpoints for IndexJournal")
 @RequestMapping("/public/index-journals")
 @RequiredArgsConstructor
+@org.springframework.stereotype.Component("publicIndexJournalController")
 public class IndexJournalController {
 
     private final WebsiteManager websiteManager;

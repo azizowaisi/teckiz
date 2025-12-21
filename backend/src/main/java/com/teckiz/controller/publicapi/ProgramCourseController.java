@@ -1,4 +1,5 @@
 package com.teckiz.controller.publicapi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.dto.ProgramCourseResponse;
 import com.teckiz.entity.CompanyModuleMapper;
@@ -21,8 +22,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@Tag(name = "Public - ProgramCourse", description = "Public API endpoints for ProgramCourse")
 @RequestMapping("/public/program-courses")
 @RequiredArgsConstructor
+@org.springframework.stereotype.Component("publicProgramCourseController")
 public class ProgramCourseController {
 
     private final WebsiteManager websiteManager;

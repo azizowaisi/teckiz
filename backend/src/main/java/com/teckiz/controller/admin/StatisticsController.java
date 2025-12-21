@@ -5,6 +5,7 @@ import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.Statistics;
 import com.teckiz.repository.StatisticsRepository;
 import com.teckiz.service.ModuleAccessManager;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin/statistics")
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'COMPANY_AUTHOR')")
+@Tag(name = "Admin - Statistics", description = "Admin endpoints for viewing statistics and analytics")
 public class StatisticsController {
 
     private final ModuleAccessManager moduleAccessManager;

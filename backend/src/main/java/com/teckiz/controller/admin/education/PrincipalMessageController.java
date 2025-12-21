@@ -1,7 +1,9 @@
 package com.teckiz.controller.admin.education;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.dto.PrincipalMessageRequest;
 import com.teckiz.dto.PrincipalMessageResponse;
+import com.teckiz.entity.Company;
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.PrincipalMessage;
 import com.teckiz.repository.PrincipalMessageRepository;
@@ -20,6 +22,7 @@ import java.util.Map;
 @RequestMapping("/education/admin/principal-message")
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'COMPANY_AUTHOR')")
+@org.springframework.stereotype.Component("adminPrincipalMessageController")
 public class PrincipalMessageController {
 
     private final ModuleAccessManager moduleAccessManager;
@@ -60,7 +63,8 @@ public class PrincipalMessageController {
         CompanyModuleMapper companyModuleMapper = moduleAccessManager.authenticateModule();
 
             PrincipalMessage message = new PrincipalMessage();
-        message.setCompany(companyModuleMapper.getCompany());
+        Company company = companyModuleMapper.getCompany();
+        message.setCompany(company);
         message.setCompanyModuleMapper(companyModuleMapper);
         message.setTitle(request.getTitle());
         message.setMessage(request.getMessage());

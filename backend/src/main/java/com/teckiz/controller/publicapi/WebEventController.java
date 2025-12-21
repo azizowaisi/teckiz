@@ -1,4 +1,5 @@
 package com.teckiz.controller.publicapi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.WebEvent;
@@ -15,8 +16,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@Tag(name = "Public - WebEvent", description = "Public API endpoints for WebEvent")
 @RequestMapping("/public/events")
 @RequiredArgsConstructor
+@org.springframework.stereotype.Component("publicWebEventController")
 public class WebEventController {
 
     private final WebsiteManager websiteManager;

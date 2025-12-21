@@ -1,4 +1,5 @@
 package com.teckiz.controller.admin.education;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.dto.SkillRequest;
 import com.teckiz.dto.SkillResponse;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/education/admin/skills")
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'COMPANY_AUTHOR')")
+@org.springframework.stereotype.Component("adminSkillController")
 public class SkillController {
 
     private final ModuleAccessManager moduleAccessManager;

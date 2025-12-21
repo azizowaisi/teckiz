@@ -1,4 +1,5 @@
 package com.teckiz.controller.publicapi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.dto.SkillResponse;
 import com.teckiz.entity.CompanyModuleMapper;
@@ -19,8 +20,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@Tag(name = "Public - Skill", description = "Public API endpoints for Skill")
 @RequestMapping("/public/skills")
 @RequiredArgsConstructor
+@org.springframework.stereotype.Component("publicSkillController")
 public class SkillController {
 
     private final WebsiteManager websiteManager;

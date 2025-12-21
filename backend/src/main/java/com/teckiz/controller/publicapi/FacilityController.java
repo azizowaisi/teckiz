@@ -1,4 +1,5 @@
 package com.teckiz.controller.publicapi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.dto.FacilityResponse;
 import com.teckiz.entity.CompanyModuleMapper;
@@ -19,8 +20,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@Tag(name = "Public - Facility", description = "Public API endpoints for Facility")
 @RequestMapping("/public/facilities")
 @RequiredArgsConstructor
+@org.springframework.stereotype.Component("publicFacilityController")
 public class FacilityController {
 
     private final WebsiteManager websiteManager;

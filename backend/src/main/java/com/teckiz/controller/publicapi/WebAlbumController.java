@@ -1,4 +1,5 @@
 package com.teckiz.controller.publicapi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.WebAlbum;
@@ -18,8 +19,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@Tag(name = "Public - WebAlbum", description = "Public API endpoints for WebAlbum")
 @RequestMapping("/public/albums")
 @RequiredArgsConstructor
+@org.springframework.stereotype.Component("publicWebAlbumController")
 public class WebAlbumController {
 
     private final WebsiteManager websiteManager;

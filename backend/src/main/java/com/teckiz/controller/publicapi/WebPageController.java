@@ -1,4 +1,5 @@
 package com.teckiz.controller.publicapi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.entity.CompanyModuleMapper;
 import com.teckiz.entity.WebPage;
@@ -14,8 +15,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@Tag(name = "Public - WebPage", description = "Public API endpoints for WebPage")
 @RequestMapping("/public/pages")
 @RequiredArgsConstructor
+@org.springframework.stereotype.Component("publicWebPageController")
 public class WebPageController {
 
     private final WebsiteManager websiteManager;

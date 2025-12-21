@@ -4,6 +4,7 @@ import com.teckiz.entity.Notification;
 import com.teckiz.entity.User;
 import com.teckiz.repository.NotificationRepository;
 import com.teckiz.repository.UserRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/notifications")
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'COMPANY_ADMIN', 'COMPANY_AUTHOR', 'COMPANY_REVIEWER')")
+@Tag(name = "Notifications", description = "User notification management endpoints")
 public class NotificationController {
 
     private final NotificationRepository notificationRepository;

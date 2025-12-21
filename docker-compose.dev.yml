@@ -12,7 +12,7 @@ services:
       MYSQL_USER: teckiz
       MYSQL_PASSWORD: teckizpassword
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data_dev:/var/lib/mysql
       - ./database/init:/docker-entrypoint-initdb.d
@@ -32,13 +32,13 @@ services:
     container_name: teckiz-backend-dev
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "8083:8080"
     environment:
       DATABASE_URL: jdbc:mysql://database:3306/teckiz?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       DATABASE_USERNAME: teckiz
       DATABASE_PASSWORD: teckizpassword
       JWT_SECRET: YWJjZGVmZ2hpamsKa2xtbm9wcXJzdHV2d3h5egpBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWg==
-      JPA_DDL_AUTO: update
+      JPA_DDL_AUTO: validate
       JPA_SHOW_SQL: true
       IS_DEV_ENV: true
     depends_on:

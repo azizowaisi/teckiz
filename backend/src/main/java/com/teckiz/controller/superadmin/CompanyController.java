@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/superadmin/company")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('SUPER_ADMIN')")
+@Tag(name = "SuperAdmin - Companies", description = "SuperAdmin endpoints for managing companies")
 public class CompanyController {
 
     private final CompanyRepository companyRepository;

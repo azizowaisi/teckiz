@@ -31,7 +31,7 @@ public class OpenApiConfig {
                                 .url("https://teckiz.com")))
                 .servers(List.of(
                         new Server()
-                                .url("http://localhost:8080/api")
+                                .url("http://localhost:8083/api")
                                 .description("Development Server"),
                         new Server()
                                 .url("https://api.teckiz.com/api")

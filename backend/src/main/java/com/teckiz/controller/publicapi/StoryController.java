@@ -1,4 +1,5 @@
 package com.teckiz.controller.publicapi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.dto.StoryResponse;
 import com.teckiz.entity.CompanyModuleMapper;
@@ -19,8 +20,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@Tag(name = "Public - Story", description = "Public API endpoints for Story")
 @RequestMapping("/public/stories")
 @RequiredArgsConstructor
+@org.springframework.stereotype.Component("publicStoryController")
 public class StoryController {
 
     private final WebsiteManager websiteManager;

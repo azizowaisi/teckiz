@@ -1,4 +1,5 @@
 package com.teckiz.controller.admin.education;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.dto.StoryRequest;
 import com.teckiz.dto.StoryResponse;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/education/admin/stories")
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'COMPANY_AUTHOR')")
+@org.springframework.stereotype.Component("adminStoryController")
 public class StoryController {
 
     private final ModuleAccessManager moduleAccessManager;

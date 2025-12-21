@@ -1,4 +1,5 @@
 package com.teckiz.controller.superadmin;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.dto.AddModuleToCompanyRequest;
 import com.teckiz.dto.CompanyModuleMapperResponse;

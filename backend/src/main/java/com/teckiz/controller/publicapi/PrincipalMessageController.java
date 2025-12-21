@@ -1,4 +1,5 @@
 package com.teckiz.controller.publicapi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.teckiz.dto.PrincipalMessageResponse;
 import com.teckiz.entity.CompanyModuleMapper;
@@ -10,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "Public - PrincipalMessage", description = "Public API endpoints for PrincipalMessage")
 @RequestMapping("/public/principal-message")
 @RequiredArgsConstructor
+@org.springframework.stereotype.Component("publicPrincipalMessageController")
 public class PrincipalMessageController {
 
     private final WebsiteManager websiteManager;

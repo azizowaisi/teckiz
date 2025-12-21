@@ -111,7 +111,7 @@ interface User {
   `]
 })
 export class UsersComponent implements OnInit {
-  users: UserInterface[] = [];
+  users: User[] = [];
   loading = false;
   error = '';
   searchTerm = '';
@@ -139,4 +139,5 @@ export class UsersComponent implements OnInit {
   onSearch(): void {
     this.loadUsers();
   }
+}
 
